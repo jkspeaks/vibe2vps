@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en" data-audience="both">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>From Vibe 2 VPS — How to vibe-code right, and get it production grade</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    /* ==============================
+       DESIGN SYSTEM — CSS VARIABLES
+       ============================== */
+    :root {
+      --bg: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --accent: #6366f1;          /* Indigo */
+      --accent-light: #eef2ff;    /* Indigo 50 */
+      --accent-dark: #4338ca;     /* Indigo 700 */
+      --navy: #0f172a;            /* Dark navy for proof panel */
+      --border: #e5e7eb;
+      --card-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      --radius: 16px;
+      --radius-sm: 8px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text-primary); line-height: 1.6; }
+
+    /* ==============================
+       AUDIENCE TOGGLE VISIBILITY
+       ============================== */
+    /* Hide audience-specific content by default */
+    .aud-nontechnical,
+    .aud-semitechnical { display: none; }
+
+    /* Show based on data-audience attribute on <html> */
+    html[data-audience="nontechnical"] .aud-nontechnical { display: block; }
+    html[data-audience="semitechnical"] .aud-semitechnical { display: block; }
+    html[data-audience="both"] .aud-nontechnical,
+    html[data-audience="both"] .aud-semitechnical { display: block; }
+
+    /* ==============================
+       PRINT STYLES
+       ============================== */
+    @media print {
+      .no-print { display: none !important; }
+      .accordion-body { display: block !important; }
+      .tab-panel { display: block !important; }
+      .tab-panel::before { content: attr(data-label); font-weight: 700; display: block; margin-bottom: 8px; }
+      #toc { display: none !important; }
+      .phase-card { break-inside: avoid; margin-bottom: 24px; }
+    }
+
+    /* ==============================
+       PHASE CARDS (ACCORDION)
+       ============================== */
+    .phase-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      transition: box-shadow 0.2s ease;
+    }
+    .phase-card:hover { box-shadow: 0 4px 16px rgba(99,102,241,0.08); }
+
+    .phase-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 20px 24px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .phase-header:hover { background: #fafafa; }
+    .phase-header.open { background: var(--accent-light); }
+
+    .phase-num {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .phase-header.open .phase-num {
+      background: var(--accent);
+      color: white;
+    }
+
+    .phase-header-text { flex: 1; }
+    .phase-headline { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+    .phase-outcome { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+    .phase-star { color: var(--accent); font-size: 13px; }
+
+    .phase-chevron {
+      flex-shrink: 0;
+      color: var(--text-secondary);
+      transition: transform 0.25s ease;
+      margin-top: 2px;
+    }
+    .phase-header.open .phase-chevron { transform: rotate(180deg); }
+
+    .phase-body {
+      display: none;
+      border-top: 1px solid var(--border);
+    }
+    .phase-body.open { display: block; }
+
+    /* ==============================
+       DUAL TABS
+       ============================== */
+    .tab-bar {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: #fafafa;
+    }
+    .tab-btn {
+      padding: 10px 20px;
+      font-size: 13px; font-weight: 500;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: none; border-top: none; border-left: none; border-right: none;
+    }
+    .tab-btn:hover { color: var(--accent); }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .tab-panel { display: none; padding: 24px; }
+    .tab-panel.active { display: block; }
+    .tab-panel[data-label]::before { content: none; } /* overridden in print */
+
+    /* ==============================
+       PROGRESS CHECKBOXES
+       ============================== */
+    .phase-check {
+      width: 18px; height: 18px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+      margin-top: 3px;
+    }
+    .phase-check.checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .phase-check.checked::after {
+      content: '✓';
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ==============================
+       COPY BUTTON
+       ============================== */
+    .copy-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 4px; padding: 3px 8px;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .copy-btn.copied { color: #10b981; border-color: #10b981; }
+
+    /* ==============================
+       CONTENT TYPOGRAPHY
+       ============================== */
+    .prose h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin: 16px 0 8px; }
+    .prose p { font-size: 14px; color: #444; line-height: 1.7; margin-bottom: 12px; }
+    .prose ul { padding-left: 20px; margin-bottom: 12px; }
+    .prose li { font-size: 14px; color: #444; line-height: 1.7; margin-bottom: 4px; list-style: disc; }
+    .prose blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 8px 16px;
+      margin: 12px 0;
+      background: var(--accent-light);
+      border-radius: 0 8px 8px 0;
+      font-size: 14px; font-style: italic; color: #555;
+    }
+    .prose code {
+      background: #f3f4f6; padding: 2px 6px;
+      border-radius: 4px; font-size: 13px; font-family: monospace;
+    }
+    .snippet-block {
+      background: var(--navy); color: #e2e8f0;
+      border-radius: var(--radius-sm); padding: 16px;
+      font-size: 13px; font-family: monospace; line-height: 1.6;
+      position: relative; margin: 12px 0; white-space: pre-wrap;
+    }
+    .snippet-block .copy-btn {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);
+      color: #94a3b8;
+    }
+    .snippet-block .copy-btn:hover { color: white; border-color: rgba(255,255,255,0.5); }
+
+    /* ==============================
+       PROOF PANEL
+       ============================== */
+    .proof-panel {
+      background: var(--navy);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 16px 0;
+    }
+    .proof-panel-title {
+      color: #94a3b8; font-size: 11px;
+      font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .proof-screenshots {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    @media (max-width: 640px) {
+      .proof-screenshots { grid-template-columns: 1fr; }
+    }
+    .proof-screenshots img {
+      width: 100%; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .proof-caption {
+      color: #94a3b8; font-size: 12px;
+      text-align: center; margin-top: 4px;
+    }
+    .proof-quote {
+      color: white; font-size: 14px;
+      text-align: center; margin-top: 14px;
+      font-style: italic; padding: 0 10px;
+    }
+
+    /* ==============================
+       TOC SIDEBAR
+       ============================== */
+    #toc {
+      position: fixed; left: max(16px, calc(50vw - 580px));
+      top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 6px;
+      z-index: 50;
+    }
+    @media (max-width: 1100px) { #toc { display: none; } }
+    .toc-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--border); cursor: pointer;
+      transition: all 0.2s; position: relative;
+    }
+    .toc-dot:hover, .toc-dot.active { background: var(--accent); transform: scale(1.4); }
+    .toc-dot::after {
+      content: attr(data-label);
+      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      background: var(--navy); color: white;
+      padding: 3px 8px; border-radius: 4px; font-size: 11px; white-space: nowrap;
+      opacity: 0; pointer-events: none; transition: opacity 0.15s;
+    }
+    .toc-dot:hover::after { opacity: 1; }
+
+    /* Audience callout badges */
+    .callout-nontechnical {
+      background: #fef9c3; border-left: 3px solid #eab308;
+      padding: 8px 12px; border-radius: 0 6px 6px 0;
+      font-size: 13px; color: #713f12; margin: 8px 0;
+    }
+    .callout-semitechnical {
+      background: #eff6ff; border-left: 3px solid #3b82f6;
+      padding: 8px 12px; border-radius: 0 6px 6px 0;
+      font-size: 13px; color: #1e3a8a; margin: 8px 0;
+    }
+
+    /* Prose table */
+    .prose table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    .prose th { padding: 8px; text-align: left; border: 1px solid var(--border); background: #f9fafb; font-weight: 600; }
+    .prose td { padding: 8px; border: 1px solid var(--border); }
+    .prose a { color: var(--accent); text-decoration: underline; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- TOC Sidebar (desktop) -->
+  <aside id="toc" class="no-print"></aside>
+
+  <!-- Main content wrapper -->
+  <main id="main-content" class="max-w-3xl mx-auto px-4 py-8">
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="text-center pt-12 pb-10">
+
+      <!-- Audience Toggle -->
+      <div id="audience-toggle" class="no-print inline-flex items-center gap-1 bg-gray-100 rounded-full p-1 mb-8 text-sm font-medium">
+        <button onclick="setAudience('nontechnical')" data-aud="nontechnical"
+          class="aud-btn px-4 py-1.5 rounded-full transition-all">Non-Tech</button>
+        <button onclick="setAudience('both')" data-aud="both"
+          class="aud-btn px-4 py-1.5 rounded-full transition-all bg-white shadow text-indigo-600">Both</button>
+        <button onclick="setAudience('semitechnical')" data-aud="semitechnical"
+          class="aud-btn px-4 py-1.5 rounded-full transition-all">Semi-Tech</button>
+      </div>
+      <p class="text-xs text-gray-400 mb-8 no-print">
+        Toggle to adjust the depth of "Do It Yourself" content throughout the playbook.
+      </p>
+
+      <!-- Title Block -->
+      <div class="inline-block bg-indigo-50 text-indigo-700 text-xs font-semibold tracking-widest uppercase px-3 py-1 rounded-full mb-4">
+        A Vibe Coding Playbook
+      </div>
+      <h1 class="text-5xl font-extrabold text-gray-900 leading-tight mb-3">
+        From Vibe 2 VPS
+      </h1>
+      <p class="text-xl text-gray-500 font-medium mb-6">
+        How to vibe-code right, and get it production grade.
+      </p>
+      <div class="w-16 h-1 bg-indigo-500 mx-auto rounded mb-8"></div>
+
+      <!-- Hook -->
+      <p class="text-lg text-gray-700 max-w-2xl mx-auto leading-relaxed mb-3">
+        Enough <strong>"Chatting"</strong> with AI. It's time to <strong>Engage.</strong>
+      </p>
+      <p class="text-base text-gray-500 max-w-xl mx-auto mb-10">
+        Most AI influencers are stuck planning imaginary vacations with the same rinse-and-repeat prompts.
+        Here's a real industry use case — from blank canvas to production-grade, HTTPS-hosted, VPS-deployed app.
+      </p>
+
+      <!-- Phase Stepper (built by JS) -->
+      <div id="phase-stepper" class="flex items-center justify-center gap-1 flex-wrap mb-10 no-print"></div>
+
+      <!-- Export button -->
+      <button onclick="window.print()" class="no-print inline-flex items-center gap-2 text-sm text-gray-400 hover:text-gray-600 border border-gray-200 rounded-full px-4 py-2 transition-colors">
+        <i data-lucide="download" class="w-4 h-4"></i>
+        Export as PDF
+      </button>
+
+    </section>
+
+    <!-- PHASES -->
+    <section id="phases" class="mt-10 space-y-4"></section>
+
+    <!-- CLOSING CTA -->
+    <section id="closing" class="mt-16 text-center py-12 px-6 rounded-2xl" style="background: var(--navy);">
+      <p class="text-white text-xl font-semibold leading-relaxed max-w-2xl mx-auto mb-6">
+        "Stop writing one-line prompts to vibe code an app and call it a day.<br/>
+        Pick a real-world problem, apply your thinking and creativity,<br/>
+        scale it till it satisfies your hunger."
+      </p>
+      <div class="w-16 h-px bg-indigo-400 mx-auto my-6"></div>
+      <p class="text-indigo-300 text-sm font-medium tracking-wide uppercase">
+        The era of the "Non-Technical Founder" is over.<br/>
+        "Vibe Architects" are commodity now.<br/>
+        Scale up to become <strong class="text-white">Agentic Engineers</strong> and create the impact.
+      </p>
+    </section>
+
+    <!-- END MATTER -->
+    <section id="end-matter" class="mt-16 space-y-12">
+
+      <!-- Tools Landscape -->
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <h2 class="text-xl font-bold text-gray-900">Tools Landscape</h2>
+          <span class="text-xs bg-amber-100 text-amber-700 font-semibold px-2 py-0.5 rounded-full">As of Early 2026 — verify before use</span>
+        </div>
+        <div class="overflow-x-auto rounded-xl border border-gray-200">
+          <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <thead style="background:#f9fafb;">
+              <tr>
+                <th style="padding:10px 14px; text-align:left; border-bottom:1px solid #e5e7eb;">Tool</th>
+                <th style="padding:10px 14px; text-align:left; border-bottom:1px solid #e5e7eb;">Category</th>
+                <th style="padding:10px 14px; text-align:left; border-bottom:1px solid #e5e7eb;">What it does</th>
+                <th style="padding:10px 14px; text-align:left; border-bottom:1px solid #e5e7eb;">Free tier?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Lovable</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">App builder</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Full-stack AI code generator</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Yes (5 tokens/day)</td></tr>
+              <tr style="background:#fafafa;"><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Bolt</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">App builder</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Alternative to Lovable</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Yes</td></tr>
+              <tr><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Cursor</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">IDE</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Local AI-assisted code editor</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Yes</td></tr>
+              <tr style="background:#fafafa;"><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">GitHub</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Version control</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Code hosting and portability</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Yes</td></tr>
+              <tr><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Supabase</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Backend/DB</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Postgres + auth + storage</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Yes</td></tr>
+              <tr style="background:#fafafa;"><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">AWS EC2</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">VPS</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Cloud server, industry standard</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Yes (6 months + $100)</td></tr>
+              <tr><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Oracle Cloud (OCI)</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">VPS</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Generous always-free VPS tier</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Yes (permanent)</td></tr>
+              <tr style="background:#fafafa;"><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Perplexity (Comet)</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">AI agent</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Browser-use computer agent</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Limited (no Max needed)</td></tr>
+              <tr><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Vercel</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Hosting</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Static + serverless deploy</td><td style="padding:10px 14px; border-bottom:1px solid #f3f4f6;">Yes</td></tr>
+              <tr style="background:#fafafa;"><td style="padding:10px 14px;">Namecheap / IONOS</td><td style="padding:10px 14px;">Domain</td><td style="padding:10px 14px;">Domain registration</td><td style="padding:10px 14px;">No (from ~$10/yr)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- The Methodology -->
+      <div class="border border-indigo-100 rounded-2xl p-8" style="background: var(--accent-light);">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">The Methodology</h2>
+        <p class="text-sm text-gray-500 mb-6">Generic, reusable, tool-agnostic. Apply to any use case.</p>
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
+            <div class="text-2xl font-black text-indigo-600 mb-1">0</div>
+            <div class="text-xs font-semibold text-gray-700">Set Expectations</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
+            <div class="text-2xl font-black text-indigo-600 mb-1">1</div>
+            <div class="text-xs font-semibold text-gray-700">Pick Use Case</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
+            <div class="text-2xl font-black text-indigo-600 mb-1">2</div>
+            <div class="text-xs font-semibold text-gray-700">Build &amp; Prompt</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
+            <div class="text-2xl font-black text-indigo-600 mb-1">3</div>
+            <div class="text-xs font-semibold text-gray-700">Own the Code</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
+            <div class="text-2xl font-black text-indigo-600 mb-1">4</div>
+            <div class="text-xs font-semibold text-gray-700">Choose Hosting</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
+            <div class="text-2xl font-black text-indigo-600 mb-1">5</div>
+            <div class="text-xs font-semibold text-gray-700">Deploy to VPS</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
+            <div class="text-2xl font-black text-indigo-600 mb-1">6</div>
+            <div class="text-xs font-semibold text-gray-700">Secure (HTTPS)</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
+            <div class="text-2xl font-black text-indigo-600 mb-1">7</div>
+            <div class="text-xs font-semibold text-gray-700">Iterate &amp; Scale</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="text-center text-xs text-gray-400 pb-12">
+        <p>From Vibe 2 VPS &nbsp;·&nbsp; A LinkedIn Playbook &nbsp;·&nbsp; Based on real experience &nbsp;·&nbsp; Built with vibe coding</p>
+      </footer>
+
+    </section>
+
+  </main>
+
+  <!-- All JS at bottom -->
+  <script>
+    // ==============================
+    // AUDIENCE TOGGLE
+    // ==============================
+    function setAudience(val) {
+      document.documentElement.setAttribute('data-audience', val);
+      document.querySelectorAll('.aud-btn').forEach(btn => {
+        const isActive = btn.getAttribute('data-aud') === val;
+        btn.classList.toggle('bg-white', isActive);
+        btn.classList.toggle('shadow', isActive);
+        btn.classList.toggle('text-indigo-600', isActive);
+      });
+    }
+
+    // ==============================
+    // PHASE STEPPER
+    // ==============================
+    const PHASE_LABELS = [
+      { num: 0, short: 'Before' },
+      { num: 1, short: 'Use Case' },
+      { num: 2, short: 'Build' },
+      { num: 3, short: 'GitHub' },
+      { num: 4, short: 'Hosting' },
+      { num: 5, short: 'Deploy ★' },
+      { num: 6, short: 'HTTPS' },
+      { num: 7, short: "What's Next" },
+    ];
+
+    const stepper = document.getElementById('phase-stepper');
+    PHASE_LABELS.forEach((p, i) => {
+      const el = document.createElement('div');
+      el.className = 'flex items-center';
+      el.innerHTML = `
+        <div class="flex flex-col items-center">
+          <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center">${p.num}</div>
+          <span class="text-xs text-gray-400 mt-1 whitespace-nowrap">${p.short}</span>
+        </div>
+        ${i < PHASE_LABELS.length - 1 ? '<div class="w-6 h-px bg-gray-200 mx-1 mb-4"></div>' : ''}
+      `;
+      stepper.appendChild(el);
+    });
+
+    // ==============================
+    // ACCORDION
+    // ==============================
+    function togglePhase(id) {
+      const header = document.getElementById('header-' + id);
+      const body = document.getElementById('body-' + id);
+      const isOpen = body.classList.contains('open');
+      body.classList.toggle('open', !isOpen);
+      header.classList.toggle('open', !isOpen);
+    }
+
+    // ==============================
+    // TABS
+    // ==============================
+    function switchTab(phaseId, tabName) {
+      const body = document.getElementById('body-' + phaseId);
+      body.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === tabName));
+      body.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.getAttribute('data-tab') === tabName));
+    }
+
+    // ==============================
+    // PROGRESS CHECKBOXES
+    // ==============================
+    function toggleCheck(id) {
+      const el = document.getElementById('check-' + id);
+      el.classList.toggle('checked');
+    }
+
+    // ==============================
+    // COPY TO CLIPBOARD
+    // ==============================
+    function copyText(btn, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        btn.classList.add('copied');
+        btn.textContent = '✓ Copied';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.textContent = 'Copy';
+        }, 2000);
+      });
+    }
+
+    // ==============================
+    // TOC SCROLL SPY
+    // ==============================
+    function buildTOC() {
+      const toc = document.getElementById('toc');
+      const phases = document.querySelectorAll('.phase-card');
+      phases.forEach((card) => {
+        const id = card.id;
+        const label = card.getAttribute('data-label');
+        const dot = document.createElement('div');
+        dot.className = 'toc-dot';
+        dot.setAttribute('data-label', label);
+        dot.onclick = () => card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        toc.appendChild(dot);
+      });
+
+      // Scroll spy
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          const dot = toc.querySelector(`[data-label="${e.target.getAttribute('data-label')}"]`);
+          if (dot) dot.classList.toggle('active', e.isIntersecting);
+        });
+      }, { threshold: 0.3 });
+      phases.forEach(p => observer.observe(p));
+    }
+
+    // ==============================
+    // PHASE CARD BUILDER
+    // ==============================
+    function buildPhaseCard({ id, num, headline, outcome, star, storyHTML, diyHTML }) {
+      const section = document.getElementById('phases');
+      const card = document.createElement('div');
+      card.className = 'phase-card';
+      card.id = 'phase-' + id;
+      card.setAttribute('data-label', `Phase ${num}`);
+      card.innerHTML = `
+        <div class="phase-header" id="header-${id}" onclick="togglePhase('${id}')">
+          <div class="phase-check no-print" id="check-${id}" onclick="event.stopPropagation(); toggleCheck('${id}')"></div>
+          <div class="phase-num">${num}</div>
+          <div class="phase-header-text">
+            <div class="phase-headline">${headline}${star ? ' <span class="phase-star">&#9733;</span>' : ''}</div>
+            <div class="phase-outcome">${outcome}</div>
+          </div>
+          <i data-lucide="chevron-down" class="phase-chevron w-5 h-5"></i>
+        </div>
+        <div class="phase-body" id="body-${id}">
+          <div class="tab-bar no-print">
+            <button class="tab-btn active" data-tab="story" onclick="switchTab('${id}', 'story')">My Story</button>
+            <button class="tab-btn" data-tab="diy" onclick="switchTab('${id}', 'diy')">Do It Yourself</button>
+          </div>
+          <div class="tab-panel active prose" data-tab="story" data-label="My Story">${storyHTML}</div>
+          <div class="tab-panel prose" data-tab="diy" data-label="Do It Yourself">${diyHTML}</div>
+        </div>
+      `;
+      section.appendChild(card);
+    }
+
+    // ==============================
+    // RENDER PHASES
+    // ==============================
+
+    buildPhaseCard({
+      id: 'phase0', num: 0,
+      headline: 'What vibe coding actually is — and what it isn\'t',
+      outcome: 'Set the right expectations before touching a single tool.',
+      star: false,
+      storyHTML: `
+        <p>Most "AI Influencers" are stuck in the loop of planning imaginary vacations — book flight, hotel, places to visit. The same old stuff, rinse and repeat. I doubt these folks even booked a real flight or hotel using their vibe-coded app.</p>
+        <p>The misconception is clear: vibe coding = one-line prompt = done. That's not vibe coding. That's <em>chatting</em>. Vibe coding done right is deliberate. It's you — with your domain knowledge, your design sense, your real problem — using AI as the engine while you stay the architect.</p>
+        <p>Here, I walk you through a real industry use case from my personal experience. The methodology is simple and can be applied to any use case. It is not confined to any particular tool. Your only struggle: identifying the use case that resonates with you.</p>
+      `,
+      diyHTML: `
+        <h3>What is Vibe Coding?</h3>
+        <p>Vibe coding is using AI-powered code generation tools to build functional software — without (or with minimal) manual coding. You describe what you want; the AI builds it.</p>
+        <p>The spectrum:</p>
+        <ul>
+          <li><strong>Level 1 (Chatting):</strong> One-line prompt, accept what you get</li>
+          <li><strong>Level 2 (Vibe Architect):</strong> Structured prompts, iterate with intent, own the design</li>
+          <li><strong>Level 3 (Agentic Engineer):</strong> Full production grade, automated CI/CD, observability, security</li>
+        </ul>
+        <p>This playbook takes you from Level 1 thinking to Level 2 execution — and shows you the door to Level 3.</p>
+        <div class="callout-nontechnical aud-nontechnical">💡 <strong>Non-Tech tip:</strong> You don't need to understand the code. You need to understand the <em>outcome</em> you want.</div>
+        <div class="callout-semitechnical aud-semitechnical">⚙️ <strong>Semi-Tech note:</strong> The tools generate React/TypeScript or similar. You don't write it, but you should be able to read a function signature and understand what it does.</div>
+      `
+    });
+
+    buildPhaseCard({
+      id: 'phase1', num: 1,
+      headline: 'Why your use case is the only decision that truly matters',
+      outcome: 'You chose the right problem. Now build the right solution.',
+      star: false,
+      storyHTML: `
+        <p>The use case I picked is <strong>Agentic Commerce Readiness Assessment</strong>. The reason: I have been doing maturity and readiness assessments for over 15 years and know every trick in the book. I am well versed with how to create these assessments from scratch for any given topic, the manual touchpoints involved end-to-end, and the automation potential.</p>
+        <p>Secondly, I see value in this — it resonates with executives in the Retail and CPG sector. My audience. My credibility. My unfair advantage.</p>
+        <p>The assessment is a multiple-choice or Likert scale survey administered via offline forms (Excel) or online forms. A report is generated at the end for the respondent to gauge their maturity or readiness across select dimensions. Sounds simple, right? Watch how I iteratively add complexity to this use case while learning tools and concepts along the way.</p>
+      `,
+      diyHTML: `
+        <h3>How to Pick Your Use Case</h3>
+        <p>Use these three criteria. All three must be true:</p>
+        <ul>
+          <li><strong>Domain you know cold</strong> — You've done it manually for years. You know the edge cases. You know what "good" looks like.</li>
+          <li><strong>Audience you can reach</strong> — You have a professional network or community that would find this useful and credible.</li>
+          <li><strong>Problem that benefits from automation</strong> — There's a real pain point: slow, expensive, inconsistent, or inaccessible without your tool.</li>
+        </ul>
+        <h3>Anti-patterns to Avoid</h3>
+        <ul>
+          <li>❌ "Flight + hotel + activities" — no domain expertise, no real users</li>
+          <li>❌ Building a clone of an existing popular app — no differentiation</li>
+          <li>❌ Picking something too broad ("a social media app") — no focus</li>
+        </ul>
+        <div class="callout-nontechnical aud-nontechnical">💡 <strong>Non-Tech tip:</strong> Think about what you do at work that involves collecting information, scoring it, and reporting back. That's your use case.</div>
+      `
+    });
+
+    buildPhaseCard({
+      id: 'phase2', num: 2,
+      headline: 'From blank canvas to working app — without writing a line of code',
+      outcome: 'A functional, styled, multi-page web app — entirely AI-generated.',
+      star: false,
+      storyHTML: `
+        <h3>Step 2a: Build the Plan Before You Prompt</h3>
+        <p>Your first instinct would be to open Lovable and tell it to create a responsive app. The tool will certainly create something. However, it is less likely to have your style and imagination embedded in it. Eight out of ten chances your audience will spot that it is a vibe-coded tool — and it loses credibility, especially if your target audience is at the executive level.</p>
+        <p>So before opening any tool, I spent time thinking through the key items: pages required (landing, survey, results dashboard), design and aesthetics (dark corporate vs white/blue), color scheme, fonts, and technology stack. A broad guideline saves you from burning tokens on the tool making decisions you should have made.</p>
+
+        <h3>Step 2b: Prompt Engineering</h3>
+        <p>I researched Bolt vs Lovable. Bolt required some developer skills to fix errors; Lovable's tight Supabase integration made it the clear choice for this use case.</p>
+        <p>I started with the free plan — 5 tokens per day. Critical constraint. Being organized was non-negotiable. When prompts are detailed, the tool follows them line by line, focusing on implementation rather than guessing. I got all three pages up in the initial 5 tokens.</p>
+        <p>The full prompt was <strong>68,000 characters</strong> — split across 3 sequential parts with continuity headers so Lovable held context between them.</p>
+
+        <h3>Real Prompt Snippets</h3>
+        <p>Here are actual snippets from the prompts I used to build the ACR app:</p>
+
+        <p><strong>1 — The Opening Brief (sets the entire context in one paragraph)</strong></p>
+        <div class="snippet-block" id="snip1">Build a complete, production-grade Agentic Commerce Readiness Assessment web application. This is a multi-page survey tool that evaluates an organization's readiness for agentic commerce (AI agents that discover, decide, and complete purchases on behalf of customers). It collects structured responses, calculates maturity scores across 7 dimensions, and presents an interactive results dashboard with a radar chart, recommendations, and PDF export.<button class="copy-btn no-print" onclick="copyText(this, document.getElementById('snip1').childNodes[0].textContent.trim())">Copy</button></div>
+
+        <p><strong>2 — Design System Block (locks visual choices so the tool doesn't guess)</strong></p>
+        <div class="snippet-block" id="snip2">Mandatory design requirements — do NOT deviate:
+• Background: Pure white (#FFFFFF) everywhere — no gray backgrounds
+• Primary text: Charcoal #333333
+• Accent color: Blue #0070f3 — used for primary buttons, progress indicators, active states
+• Card style: White bg, 1px #E5E7EB border, border-radius: 12px
+• Radio options displayed as selectable cards (not native radio dots) with border highlight on selection<button class="copy-btn no-print" onclick="copyText(this, document.getElementById('snip2').childNodes[0].textContent.trim())">Copy</button></div>
+
+        <p><strong>3 — Business Logic Block (embeds rules directly — no ambiguity left for the tool)</strong></p>
+        <div class="snippet-block" id="snip3">Question Filtering Logic (CRITICAL) — Based on the respondent's role_type:
+• Business → Show questions where question_type = "Business" OR "Synthesis"
+• Technical → Show questions where question_type = "Technical" OR "Synthesis"
+• Both → Show ALL questions (Business + Technical + Synthesis)<button class="copy-btn no-print" onclick="copyText(this, document.getElementById('snip3').childNodes[0].textContent.trim())">Copy</button></div>
+
+        <p><strong>4 — Multi-Part Continuity Header (prevents context loss across 3 prompts)</strong></p>
+        <div class="snippet-block" id="snip4">IMPORTANT: This is Part 1 of a 3-part prompt. After this prompt is processed, I will provide Part 2 and Part 3. Do NOT start building until all 3 parts are received. Read and absorb this part first, then wait for Parts 2 and 3.<button class="copy-btn no-print" onclick="copyText(this, document.getElementById('snip4').childNodes[0].textContent.trim())">Copy</button></div>
+
+        <p><em>Tip: Despite giving a detailed prompt, add a line at the end: "Ask me clarifying questions if any before building."</em></p>
+      `,
+      diyHTML: `
+        <h3>The Generic Prompt Engineering Framework</h3>
+        <p>Follow this sequence for any vibe coding project:</p>
+        <ul>
+          <li><strong>1. Research</strong> — Study 3-5 similar apps. Note what you like and what you'd do differently.</li>
+          <li><strong>2. Plan</strong> — List every page, feature, and user flow. Be specific about what happens on each screen.</li>
+          <li><strong>3. Design spec</strong> — Pick theme, colors, fonts, layout. Write it down with exact values.</li>
+          <li><strong>4. Prompt</strong> — Write the full prompt covering: tech stack, design system, database schema, each page's layout and behavior, business logic, scoring/data rules, and content data.</li>
+          <li><strong>5. Refine</strong> — Use each subsequent prompt to add one new feature or fix one specific issue. Detailed, focused prompts only.</li>
+        </ul>
+        <h3>Why One-Line Prompts Fail</h3>
+        <p>The tool has to make every undecided choice for you. It picks a random theme. It invents a data model. It creates a UX nobody asked for. You then spend 10x more tokens trying to undo those decisions — burning your daily allowance with nothing to show.</p>
+        <h3>Token Management Rules</h3>
+        <ul>
+          <li>Never prompt without a written plan for that session</li>
+          <li>One feature per prompt — not a list of features</li>
+          <li>Split prompts larger than ~15K characters into sequential parts with continuity headers</li>
+          <li>Use ChatGPT or Claude to clean up and organize your prompt before pasting it</li>
+        </ul>
+        <div class="callout-nontechnical aud-nontechnical">💡 <strong>Non-Tech tip:</strong> Think of your prompt like a job description for a very fast contractor. Vague = bad work. Specific = exactly what you asked for.</div>
+        <div class="callout-semitechnical aud-semitechnical">⚙️ <strong>Semi-Tech note:</strong> Embed your database schema directly in the prompt. Tools like Lovable and Bolt understand SQL CREATE TABLE statements and will wire up Supabase correctly if you give them the schema upfront.</div>
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="https://lovableprompts.app" target="_blank" class="text-indigo-600 underline">lovableprompts.app</a> — prompt inspiration for Lovable</li>
+        </ul>
+      `
+    });
+
+    buildPhaseCard({
+      id: 'phase3', num: 3,
+      headline: 'Own your code. Escape the platform.',
+      outcome: 'Your codebase is now yours — portable, inspectable, version-controlled.',
+      star: false,
+      storyHTML: `
+        <p>Just when I thought everything was done and mission accomplished, I realized: when my paid Lovable subscription ends, I lose the custom domain and get the "Edit with Lovable" badge back. That would not be pretty for an executive-facing tool.</p>
+        <p>I discovered that moving the codebase to GitHub would keep Lovable at bay and keep my project intact. Moving the code to GitHub is a one-click process in Lovable. Once done, I opened the repo in Cursor to verify that no part of the codebase was referencing any script back to Lovable's servers. Once clean — independence achieved.</p>
+      `,
+      diyHTML: `
+        <h3>What GitHub Gives You</h3>
+        <p>By moving the project to GitHub, you own the generated codebase, stored safely outside of Lovable's platform. This protects your work from:</p>
+        <ul>
+          <li>Platform issues or service changes</li>
+          <li>Account problems or subscription lapses</li>
+          <li>Branding locks (the "Edit with Lovable" badge)</li>
+        </ul>
+        <p>In addition, GitHub integration allows you to clone the repository and work locally in your preferred IDE (such as Cursor). This provides granular control and customization options that may be limited within Lovable's visual editor.</p>
+        <p>You can also leverage the AI feature in Cursor to confirm there is no part of the codebase referencing any script back to Lovable's servers. Finally, once the code is on GitHub, you are free to self-host or deploy the application to any platform (e.g., Vercel, AWS).</p>
+        <h3>How to Check for Platform Dependencies</h3>
+        <ul>
+          <li>Open the repo in Cursor (or any AI-enabled IDE)</li>
+          <li>Ask: "Are there any references to lovable.app, lovable.dev, or any external scripts I don't own?"</li>
+          <li>Review flagged files. Remove or replace any third-party references.</li>
+        </ul>
+        <div class="callout-nontechnical aud-nontechnical">💡 <strong>Non-Tech tip:</strong> Think of GitHub like a safe deposit box for your code. Even if Lovable disappears tomorrow, your work is safe and accessible.</div>
+      `
+    });
+
+    buildPhaseCard({
+      id: 'phase4', num: 4,
+      headline: 'Free hosting is real. Picking the right one isn\'t obvious.',
+      outcome: 'A VPS selected, configured, and ready — without paying a cent.',
+      star: false,
+      storyHTML: `
+        <p>My domain is on shared hosting. My provider does not allow installation of Node.js on my plan. I needed to upgrade to a VPS (Virtual Private Server) — which costs 6x more than my current plan. Not an option.</p>
+        <p>I researched alternatives and found a few $5/month hosting options. Unfortunately, I was already paying for one hosting plan and adding another didn't make sense. I continued my research and found two potential options: <strong>AWS EC2 free tier</strong> and <strong>Oracle Cloud (OCI)</strong>.</p>
+        <p>OCI offered a significantly more generous "Always Free" tier with far more compute and network resources. AWS offered a free tier for 6 months with $100 credit to test all their features. OCI is better for permanent, free VPS. AWS is ideal for learning the industry-standard platform.</p>
+        <p>Initially, I was inclined towards the free, long-term hosting and picked OCI. Later I realized that the help files and documentation available for AWS was plentiful and taking help from Claude would be easy. Hence, I decided to shift course from OCI to AWS.</p>
+      `,
+      diyHTML: `
+        <h3>The Hosting Decision Framework</h3>
+        <p>Ask yourself these 4 questions:</p>
+        <ul>
+          <li><strong>Does my app need Node.js or a backend runtime?</strong> If yes → you need a VPS (shared hosting won't work)</li>
+          <li><strong>How long do I need this to run?</strong> Permanent → OCI Always Free. Learning/6 months → AWS Free Tier.</li>
+          <li><strong>How much AI assistance will I need during setup?</strong> AWS has far more documentation and community support for AI-assisted debugging.</li>
+          <li><strong>What's my budget?</strong> Both OCI and AWS have genuinely free options — no credit card charges if you stay within limits.</li>
+        </ul>
+        <h3>Free Hosting Quick Comparison (as of early 2026)</h3>
+        <table style="width:100%; border-collapse:collapse; font-size:13px; margin-top:8px;">
+          <tr style="background:#f9fafb;">
+            <th style="padding:8px; text-align:left; border:1px solid #e5e7eb;">Option</th>
+            <th style="padding:8px; text-align:left; border:1px solid #e5e7eb;">Free?</th>
+            <th style="padding:8px; text-align:left; border:1px solid #e5e7eb;">Best for</th>
+          </tr>
+          <tr><td style="padding:8px; border:1px solid #e5e7eb;">Oracle Cloud (OCI)</td><td style="padding:8px; border:1px solid #e5e7eb;">Always Free (permanent)</td><td style="padding:8px; border:1px solid #e5e7eb;">Long-term production hosting</td></tr>
+          <tr><td style="padding:8px; border:1px solid #e5e7eb;">AWS EC2</td><td style="padding:8px; border:1px solid #e5e7eb;">Free 6 months + $100 credit</td><td style="padding:8px; border:1px solid #e5e7eb;">Learning industry standard</td></tr>
+          <tr><td style="padding:8px; border:1px solid #e5e7eb;">Vercel</td><td style="padding:8px; border:1px solid #e5e7eb;">Free (static/serverless)</td><td style="padding:8px; border:1px solid #e5e7eb;">Frontend-only apps</td></tr>
+          <tr><td style="padding:8px; border:1px solid #e5e7eb;">Railway / Render</td><td style="padding:8px; border:1px solid #e5e7eb;">Free tier (limited)</td><td style="padding:8px; border:1px solid #e5e7eb;">Quick Node.js deploys</td></tr>
+        </table>
+        <div class="callout-semitechnical aud-semitechnical">⚙️ <strong>Semi-Tech note:</strong> If your app uses Supabase for the backend (database, auth), your app code is actually frontend-only — which means Vercel's free tier works perfectly. Only go to a VPS if you're running your own Node.js server.</div>
+      `
+    });
+
+    buildPhaseCard({
+      id: 'phase5', num: 5,
+      headline: 'From local to live — and an AI agent takes the wheel',
+      outcome: 'Your app is running live at a public URL. You barely clicked a button.',
+      star: true,
+      storyHTML: `
+        <h3>5a — Set Up EC2</h3>
+        <p>I created an account in AWS and started to read on how to set up EC2 and host the app. Reading pages and pages of documentation when I have AI available seemed counterproductive. I asked Claude to walk me through the EC2 setup — step by step, my actual console, real-time guidance. Hit the first error, pivoted to a different approach.</p>
+
+        <h3>5b — The Perplexity Computer Moment ★</h3>
+        <p>I had this instinct that Perplexity Assistant, even without the Max plan, would leverage some capabilities of Perplexity Computer — which had just launched. So I tapped into <strong>Comet browser</strong>, created the AWS account, and started to configure the EC2 instance.</p>
+        <p>Hit the first error and asked Perplexity Assistant to take over. Gave it a couple of permissions it wanted — like accessing the browser. No different from what I had done with Claude Code, Craft agent and OpenClaw. Using this permission, it started to take screenshots, read what was on the screen, scroll, click buttons, fill text boxes, and submit them on my behalf.</p>
+        <p>To my surprise, Perplexity Assistant did leverage Perplexity Computer extensions to take screenshots, click buttons, navigate the AWS Console, fill form fields and fix the errors.</p>
+
+        <div class="proof-panel">
+          <div class="proof-panel-title">Perplexity Computer in Action — Live Evidence</div>
+          <div class="proof-screenshots">
+            <div>
+              <img src="assets/perplexity-screen-1.png" alt="Perplexity building its to-do list and preparing SSH connection to EC2" />
+              <div class="proof-caption">Perplexity builds its own to-do list and prepares to SSH into EC2</div>
+            </div>
+            <div>
+              <img src="assets/perplexity-screen-2.png" alt="Perplexity navigating AWS Console — DNS added, status Issued" />
+              <div class="proof-caption">Perplexity navigates AWS Console — "DNS added. Status: Issued."</div>
+            </div>
+          </div>
+          <div class="proof-quote">"I didn't click a single button in this step."</div>
+        </div>
+
+        <h3>5c — App Goes Live</h3>
+        <p>This was successful completion of Phase 3. My project was live at <a href="http://acr-tool.jkspeaks.com" target="_blank" class="text-indigo-600 underline">http://acr-tool.jkspeaks.com</a> (Note: http, not https — yet).</p>
+      `,
+      diyHTML: `
+        <h3>EC2 Setup Checklist (Generic)</h3>
+        <ul>
+          <li>Create a free-tier AWS account (or OCI equivalent)</li>
+          <li>Launch an EC2 instance: t2.micro (free tier), Amazon Linux 2 or Ubuntu</li>
+          <li>Configure security group: open ports 22 (SSH), 80 (HTTP), 443 (HTTPS)</li>
+          <li>Create a key pair and download the .pem file</li>
+          <li>SSH into the instance and install Node.js via nvm</li>
+          <li>Clone your GitHub repo onto the server</li>
+          <li>Run npm install and npm run build</li>
+          <li>Start the app with PM2 (process manager) so it stays running after you disconnect</li>
+        </ul>
+        <h3>What is Perplexity Computer?</h3>
+        <p>Perplexity Computer is an AI agent that can control a browser — taking screenshots, clicking buttons, filling forms, navigating web interfaces — on your behalf. It's accessible via the <strong>Comet browser</strong>.</p>
+        <p>When you hit a complex AWS setup error, instead of reading documentation for 30 minutes, you can:</p>
+        <ul>
+          <li>Open Comet browser</li>
+          <li>Ask Perplexity Assistant to "fix the EC2 configuration error"</li>
+          <li>Grant it browser access permission when prompted</li>
+          <li>Watch it take over — clicking, configuring, verifying</li>
+        </ul>
+        <p><strong>Permissions to grant:</strong> Browser access (to take screenshots and interact with the page). This is equivalent to screen sharing with a capable colleague.</p>
+        <div class="callout-nontechnical aud-nontechnical">💡 <strong>Non-Tech tip:</strong> Think of this as hiring a contractor who can see your screen and do the work for you. You watch, you approve, they execute.</div>
+        <div class="callout-semitechnical aud-semitechnical">⚙️ <strong>Semi-Tech note:</strong> Perplexity Computer uses browser extension APIs similar to how Claude Code uses tool calls. It's not magic — it's structured API calls to browser actions wrapped in an agent loop.</div>
+      `
+    });
+
+    buildPhaseCard({
+      id: 'phase6', num: 6,
+      headline: 'Your domain. Your SSL. Your credibility.',
+      outcome: 'http://acr-tool.jkspeaks.com → https:// — in under 5 minutes.',
+      star: false,
+      storyHTML: `
+        <p>With no past AWS experience, reading blogs on how to set up HTTPS on AWS was making me think — why am I reading pages and pages of documentation when I can ask AI to help?</p>
+        <p>A one-line prompt and Perplexity Assistant was back in action, setting up the certificates, load balancer, and whatever else was required to get my project up on HTTPS. This entire process took under 5 minutes. The final URL: <a href="https://acr-tool.jkspeaks.com" target="_blank" class="text-indigo-600 underline">https://acr-tool.jkspeaks.com</a></p>
+        <p>For those wondering how long did Step 4c to 5b take in total: approximately 4 hours, including my lunch break.</p>
+      `,
+      diyHTML: `
+        <h3>What HTTPS Requires</h3>
+        <ul>
+          <li><strong>SSL/TLS Certificate</strong> — proves your domain is legitimate. Free via AWS ACM (Certificate Manager) or Let's Encrypt.</li>
+          <li><strong>Load Balancer or Reverse Proxy</strong> — routes HTTPS traffic to your app. On AWS: Application Load Balancer (ALB). On a generic VPS: Nginx as a reverse proxy.</li>
+          <li><strong>DNS record update</strong> — point your domain's A record to the load balancer or server IP.</li>
+        </ul>
+        <h3>The AI-Assisted Approach</h3>
+        <p>Rather than following 10-step AWS documentation, use this one-liner as your starting prompt:</p>
+        <div class="snippet-block" id="snip-https">"Set up HTTPS for my Node.js app running on AWS EC2 at [your IP]. My domain is [domain]. Use AWS Certificate Manager for the SSL certificate and an Application Load Balancer for HTTPS termination."<button class="copy-btn no-print" onclick="copyText(this, document.getElementById('snip-https').childNodes[0].textContent.trim())">Copy</button></div>
+        <div class="callout-nontechnical aud-nontechnical">💡 <strong>Non-Tech tip:</strong> HTTPS is the padlock in the browser address bar. Without it, browsers warn visitors that your site is "not secure." It's not optional for a professional app.</div>
+      `
+    });
+
+    buildPhaseCard({
+      id: 'phase7', num: 7,
+      headline: 'This isn\'t the end. This is Version 1.',
+      outcome: 'A framework you can apply to any use case, any time.',
+      star: false,
+      storyHTML: `
+        <p>This project does not end here. Here is how I am thinking through the next iterations — so you can see what scaling a vibe-coded app to production grade actually looks like:</p>
+        <ul>
+          <li>Observability setup using AWS native features + open source tools</li>
+          <li>Token-based login system — enabling multiple organizations to run surveys simultaneously</li>
+          <li>Capability to take a custom questionnaire as input and generate a tailored assessment</li>
+          <li>Advanced database management console</li>
+          <li>Reassessment after 12 months — a report showing how the organization has matured</li>
+          <li>Chatbot to interact with the generated report</li>
+          <li>Voice-activated survey filling (accessibility feature)</li>
+        </ul>
+        <p>The list goes on. Where it stops is when you have found your preferred technology stack and mastered the concepts to apply to any complementary technology.</p>
+      `,
+      diyHTML: `
+        <h3>The Maturity Ladder</h3>
+        <ul>
+          <li><strong>Non-Technical Founder</strong> — Uses AI to describe what they want. Accepts what they get.</li>
+          <li><strong>Vibe Architect</strong> — Structures prompts. Owns the design. Iterates with intent. (Where this playbook takes you)</li>
+          <li><strong>Agentic Engineer</strong> — Combines domain expertise with agent orchestration. Observability. Security. Scale.</li>
+        </ul>
+        <h3>What "Production Grade" Means</h3>
+        <ul>
+          <li>Custom domain with HTTPS</li>
+          <li>No platform branding or dependencies</li>
+          <li>Data persisted in a real database (not localStorage)</li>
+          <li>Error handling and validation</li>
+          <li>App stays running when you close your laptop (process manager)</li>
+          <li>You can hand the URL to a client and not be embarrassed</li>
+        </ul>
+        <div class="callout-nontechnical aud-nontechnical">💡 <strong>Non-Tech tip:</strong> Production grade doesn't mean perfect. It means it works reliably for real users in real conditions.</div>
+      `
+    });
+
+    // Build TOC and init icons (must be last — after all cards are in DOM)
+    buildTOC();
+    lucide.createIcons();
+
+  </script>
+
+</body>
+</html>
