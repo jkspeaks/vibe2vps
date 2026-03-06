@@ -860,12 +860,13 @@
       star: false,
       storyHTML: `
         <h3>Step 2a: Build the Plan Before You Prompt</h3>
-        <p>Your first instinct might be to prompt a tool like Lovable and accept whatever responsive app it generates. However, an unguided output lacks the professional sophistication required to maintain credibility at the executive level. Before engaging any tool, you must define the architectural blueprint: page flows, design aesthetics, and the technical stack. Similar to constructing a business requirements specification document. This way, the output generated will have your style and imagination. <em> You are in control.</em> A rigorous initial specification also prevents the waste of resources on AI-driven "guesswork."</p>
-        <p>So before opening any tool, I spent time thinking through the key items: pages required (landing, survey, results dashboard), design and aesthetics (dark corporate vs clean), color scheme, fonts, and technology stack. A broad guideline saves you from burning tokens on the tool making decisions you should have made.</p>
+        <p>Your first instinct might be to prompt a tool like Lovable and accept whatever responsive app it generates. However, an unguided output lacks the professional sophistication required to maintain credibility esp. at the executive level.</p>
+        <p>Before engaging any tool, you must define the architectural blueprint: page flows, design aesthetics, and the technical stack. Similar to constructing a business requirements specification document. This way, the output generated will have your style, branding and imagination. This keeps <em>you</em> in control. A rigorous initial specification also prevents the waste of resources on AI-driven "guesswork."</p>
+        <p>So before starting to vibe, I spend time thinking through the key items: pages required (landing, survey, dashboard page), design and aesthetics (dark vs clean), color scheme, fonts, and technology stack. A broad guideline saves you from burning tokens, as the tool does not have to think and make decisions now.</p>
         <p>Having a developer mindset does help, but not mandatory.</p>
         
         <h3>Step 2b: Prompt Engineering</h3>
-        <p>I researched Bolt vs Lovable. Bolt required some developer skills to fix errors; Lovable's tight Supabase integration made it the clear choice for this use case.</p>
+        <p>I researched Bolt and Lovable. Bolt required some developer skills to fix errors; Lovable's tight Supabase integration made it the clear choice for this use case.</p>
         <p>I started with the free plan — 5 tokens per day. Critical constraint. Being organized was non-negotiable. When prompts are detailed, the tool follows them line by line, focusing on implementation rather than guessing. I got all three pages up in the initial 5 tokens.</p>
         <p>The full prompt was <strong>68,000 characters</strong> — split across 3 sequential parts with continuity headers so Lovable held context between them.</p>
 
@@ -895,27 +896,27 @@
         <p><em>Tip: Despite giving a detailed prompt, add a line at the end: "Ask me clarifying questions if any before building."</em></p>
       `,
       diyHTML: `
-        <h3>The Generic Prompt Engineering Framework</h3>
+        <h3>The Vibe-coding Framework</h3>
         <p>Follow this sequence for any vibe coding project:</p>
         <ul>
-          <li><strong>1. Research</strong>: First, study similar apps in the market (if available). Define your apps USP. Two, Narrow down on the right tool for your use case based-on whether it is mostly static pages or has interactivity with backend, etc.</li>
-          <li><strong>2. Plan/visualize</strong>: List every page, feature, and user flow on a notepad. Be specific about what happens on each screen. In short, visualize the end-state.</li>
-          <li><strong>3. Design spec</strong>: Pick theme, colors, fonts, layout. Write it down with exact values. For example, if you liked the colors on a site, note it down the hex values.</li>
-          <li><strong>4. Prompt building</strong>: Write the full prompt covering: tech stack, design system, database schema, each page's layout and behavior, business logic, scoring/data rules, and content data. Take help from your favorite GPT.</li>
+          <li><strong>1. Research & Framework</strong>: First, study similar apps in the market (if available). Define your apps USP or create the framework for what you are going to build. Two, Narrow down on the right tool for your use case based-on whether it is mostly static pages or has interactivity with backend, etc.</li>
+          <li><strong>2. Plan & visualize</strong>: List every page, feature, and user flow on a notepad. Be specific about what happens on each screen. In short, visualize the end-state.</li>
+          <li><strong>3. Design spec</strong>: Pick theme, colors, fonts, layout. Write it down with exact values. For example, if you liked the colors on a site note the hex values, if you liked the background image, save it.</li>
+          <li><strong>4. Prompt engineering</strong>: Write the full prompt covering: tech stack, design system, database schema, each page's layout and behavior, business logic, scoring/data rules, and content data. Non-coders, don't fret. Take help from your favorite GPT. If you don't know something, go with the defaults.</li>
           <li><strong>5. Refine & Iterate</strong>: Use each subsequent prompt to add one new feature or fix one specific issue. Detailed, focused prompts only.</li>
         </ul>
         <h3>Why One-Line Prompts Fail</h3>
-        <p>The tool has to make every <em>undecided</em> choice for you. It picks a random theme. It designs a basic data model. It creates a UX nobody asked for. You then spend 10x more tokens trying to undo those decisions — burning your daily allowance with nothing to show.</p>
+        <p>The tool has to make every <em>choice</em> for you. From picking a theme to color scheme to placement of elements to the technologies to use - every little detail. At the end, it might create a UI/UX nobody asked for. You then spend 10x more tokens trying to undo those decisions. This will burn your daily free credits with nothing to show.</p>
         <h3>Token Management Rules</h3>
         <ul>
           <li>Never prompt without a written plan for that session</li>
-          <li>One feature per prompt — not a list of features</li>
+          <li>One feature per prompt — not a list of features. Alt: a collection of related features</li>
           <li>Split prompts larger than ~15K characters into sequential parts with continuity headers</li>
-          <li>Use ChatGPT or Claude to clean up and organize your prompt before pasting it</li>
-          <li>Ask the tool to process the prompt and ask clarifying questions before building</li>
+          <li>Use ChatGPT or Claude to clean up, enhance and organize your prompt before pasting in the tool</li>
+          <li>Ask the tool to process the prompt first, ask clarifying questions before building</li>
         </ul>
-        <div class="callout-nontechnical aud-nontechnical">💡 <strong>Non-Tech tip:</strong> Think of your prompt like a job description for a very fast contractor. Vague = bad work. Specific = exactly what you asked for.</div>
-        <div class="callout-semitechnical aud-semitechnical">⚙️ <strong>Semi-Tech note:</strong> Embed your database schema directly in the prompt. Tools like Lovable and Bolt understand SQL CREATE TABLE statements and will wire up Supabase correctly if you give them the schema upfront.</div>
+        <div class="callout-nontechnical aud-nontechnical">💡 <strong>Non-Tech tip:</strong> Treat your prompt like a high-stakes contract for an elite technical lead. Vague = bad work. Specific = exactly what you asked for.</div>
+        <div class="callout-semitechnical aud-semitechnical">⚙️ <strong>Semi-Tech note:</strong> Embed your excel or database schema directly in the prompt. Tools like Lovable and Bolt are capable of processing SQL statements like CREATE TABLE, and will wire up Supabase correctly if you give them the schema upfront.</div>
         <h3>Resources</h3>
         <ul>
           <li><a href="https://lovableprompts.app" target="_blank" class="text-teal-600 underline">lovableprompts.app</a> — prompt inspiration for Lovable</li>
