@@ -24,9 +24,9 @@
       --bg: #ffffff;
       --text-primary: #1a1a1a;
       --text-secondary: #666666;
-      --accent: #6366f1;          /* Indigo */
-      --accent-light: #eef2ff;    /* Indigo 50 */
-      --accent-dark: #4338ca;     /* Indigo 700 */
+      --accent: #0d9488;          /* Teal 600 */
+      --accent-light: #f0fdfa;    /* Teal 50 */
+      --accent-dark: #0f766e;     /* Teal 700 */
       --navy: #0f172a;            /* Dark navy for proof panel */
       --border: #e5e7eb;
       --card-shadow: 0 1px 4px rgba(0,0,0,0.07);
@@ -75,7 +75,7 @@
       overflow: hidden;
       transition: box-shadow 0.2s ease;
     }
-    .phase-card:hover { box-shadow: 0 4px 16px rgba(99,102,241,0.08); }
+    .phase-card:hover { box-shadow: 0 4px 16px rgba(13,148,136,0.08); }
 
     .phase-header {
       display: flex;
@@ -314,7 +314,7 @@
         <button onclick="setAudience('nontechnical')" data-aud="nontechnical"
           class="aud-btn px-4 py-1.5 rounded-full transition-all">Non-Tech</button>
         <button onclick="setAudience('both')" data-aud="both"
-          class="aud-btn px-4 py-1.5 rounded-full transition-all bg-white shadow text-indigo-600">Both</button>
+          class="aud-btn px-4 py-1.5 rounded-full transition-all bg-white shadow text-teal-600">Both</button>
         <button onclick="setAudience('semitechnical')" data-aud="semitechnical"
           class="aud-btn px-4 py-1.5 rounded-full transition-all">Semi-Tech</button>
       </div>
@@ -323,7 +323,7 @@
       </p>
 
       <!-- Title Block -->
-      <div class="inline-block bg-indigo-50 text-indigo-700 text-xs font-semibold tracking-widest uppercase px-3 py-1 rounded-full mb-4">
+      <div class="inline-block bg-teal-50 text-teal-700 text-xs font-semibold tracking-widest uppercase px-3 py-1 rounded-full mb-4">
         A Vibe Coding Playbook
       </div>
       <h1 class="text-5xl font-extrabold text-gray-900 leading-tight mb-3">
@@ -332,7 +332,7 @@
       <p class="text-xl text-gray-500 font-medium mb-6">
         How to vibe-code right, and get it production grade.
       </p>
-      <div class="w-16 h-1 bg-indigo-500 mx-auto rounded mb-8"></div>
+      <div class="w-16 h-1 bg-teal-500 mx-auto rounded mb-8"></div>
 
       <!-- Hook -->
       <p class="text-lg text-gray-700 max-w-2xl mx-auto leading-relaxed mb-3">
@@ -354,8 +354,16 @@
 
     </section>
 
+    <!-- Expand All -->
+    <div class="flex justify-end mb-2 no-print">
+      <button id="expand-all-btn" onclick="toggleExpandAll()"
+        class="text-sm text-teal-600 hover:text-teal-800 font-medium transition-colors">
+        Expand All ↓
+      </button>
+    </div>
+
     <!-- PHASES -->
-    <section id="phases" class="mt-10 space-y-4"></section>
+    <section id="phases" class="mt-2 space-y-4"></section>
 
     <!-- CLOSING CTA -->
     <section id="closing" class="mt-16 text-center py-12 px-6 rounded-2xl" style="background: var(--navy);">
@@ -364,8 +372,8 @@
         Pick a real-world problem, apply your thinking and creativity,<br/>
         scale it till it satisfies your hunger."
       </p>
-      <div class="w-16 h-px bg-indigo-400 mx-auto my-6"></div>
-      <p class="text-indigo-300 text-sm font-medium tracking-wide uppercase">
+      <div class="w-16 h-px bg-teal-400 mx-auto my-6"></div>
+      <p class="text-teal-300 text-sm font-medium tracking-wide uppercase">
         The era of the "Non-Technical Founder" is over.<br/>
         "Vibe Architects" are commodity now.<br/>
         Scale up to become <strong class="text-white">Agentic Engineers</strong> and create the impact.
@@ -408,40 +416,40 @@
       </div>
 
       <!-- The Methodology -->
-      <div class="border border-indigo-100 rounded-2xl p-8" style="background: var(--accent-light);">
+      <div class="border border-teal-100 rounded-2xl p-8" style="background: var(--accent-light);">
         <h2 class="text-xl font-bold text-gray-900 mb-2">The Methodology</h2>
         <p class="text-sm text-gray-500 mb-6">Generic, reusable, tool-agnostic. Apply to any use case.</p>
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
-            <div class="text-2xl font-black text-indigo-600 mb-1">0</div>
+          <div class="bg-white rounded-xl p-4 text-center border border-teal-100">
+            <div class="text-2xl font-black text-teal-600 mb-1">0</div>
             <div class="text-xs font-semibold text-gray-700">Set Expectations</div>
           </div>
-          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
-            <div class="text-2xl font-black text-indigo-600 mb-1">1</div>
+          <div class="bg-white rounded-xl p-4 text-center border border-teal-100">
+            <div class="text-2xl font-black text-teal-600 mb-1">1</div>
             <div class="text-xs font-semibold text-gray-700">Pick Use Case</div>
           </div>
-          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
-            <div class="text-2xl font-black text-indigo-600 mb-1">2</div>
+          <div class="bg-white rounded-xl p-4 text-center border border-teal-100">
+            <div class="text-2xl font-black text-teal-600 mb-1">2</div>
             <div class="text-xs font-semibold text-gray-700">Build &amp; Prompt</div>
           </div>
-          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
-            <div class="text-2xl font-black text-indigo-600 mb-1">3</div>
+          <div class="bg-white rounded-xl p-4 text-center border border-teal-100">
+            <div class="text-2xl font-black text-teal-600 mb-1">3</div>
             <div class="text-xs font-semibold text-gray-700">Own the Code</div>
           </div>
-          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
-            <div class="text-2xl font-black text-indigo-600 mb-1">4</div>
+          <div class="bg-white rounded-xl p-4 text-center border border-teal-100">
+            <div class="text-2xl font-black text-teal-600 mb-1">4</div>
             <div class="text-xs font-semibold text-gray-700">Choose Hosting</div>
           </div>
-          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
-            <div class="text-2xl font-black text-indigo-600 mb-1">5</div>
+          <div class="bg-white rounded-xl p-4 text-center border border-teal-100">
+            <div class="text-2xl font-black text-teal-600 mb-1">5</div>
             <div class="text-xs font-semibold text-gray-700">Deploy to VPS</div>
           </div>
-          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
-            <div class="text-2xl font-black text-indigo-600 mb-1">6</div>
+          <div class="bg-white rounded-xl p-4 text-center border border-teal-100">
+            <div class="text-2xl font-black text-teal-600 mb-1">6</div>
             <div class="text-xs font-semibold text-gray-700">Secure (HTTPS)</div>
           </div>
-          <div class="bg-white rounded-xl p-4 text-center border border-indigo-100">
-            <div class="text-2xl font-black text-indigo-600 mb-1">7</div>
+          <div class="bg-white rounded-xl p-4 text-center border border-teal-100">
+            <div class="text-2xl font-black text-teal-600 mb-1">7</div>
             <div class="text-xs font-semibold text-gray-700">Iterate &amp; Scale</div>
           </div>
         </div>
@@ -449,7 +457,9 @@
 
       <!-- Footer -->
       <footer class="text-center text-xs text-gray-400 pb-12">
+        <hr class="border-gray-200 mb-6" />
         <p>From Vibe 2 VPS &nbsp;·&nbsp; A LinkedIn Playbook &nbsp;·&nbsp; Based on real experience &nbsp;·&nbsp; Built with vibe coding</p>
+        <p class="mt-2">Author: Jayakumar Rajaretnam (JK) &nbsp;|&nbsp; <a href="https://www.jkspeaks.com" target="_blank" class="hover:text-teal-600 underline">www.jkspeaks.com</a></p>
       </footer>
 
     </section>
@@ -467,7 +477,7 @@
         const isActive = btn.getAttribute('data-aud') === val;
         btn.classList.toggle('bg-white', isActive);
         btn.classList.toggle('shadow', isActive);
-        btn.classList.toggle('text-indigo-600', isActive);
+        btn.classList.toggle('text-teal-600', isActive);
       });
     }
 
@@ -491,13 +501,26 @@
       el.className = 'flex items-center';
       el.innerHTML = `
         <div class="flex flex-col items-center">
-          <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center">${p.num}</div>
+          <div class="w-8 h-8 rounded-full bg-teal-100 text-teal-700 text-xs font-bold flex items-center justify-center">${p.num}</div>
           <span class="text-xs text-gray-400 mt-1 whitespace-nowrap">${p.short}</span>
         </div>
         ${i < PHASE_LABELS.length - 1 ? '<div class="w-6 h-px bg-gray-200 mx-1 mb-4"></div>' : ''}
       `;
       stepper.appendChild(el);
     });
+
+    // ==============================
+    // EXPAND ALL / COLLAPSE ALL
+    // ==============================
+    function toggleExpandAll() {
+      const btn = document.getElementById('expand-all-btn');
+      const allBodies = document.querySelectorAll('.phase-body');
+      const allHeaders = document.querySelectorAll('.phase-header');
+      const anyOpen = [...allBodies].some(b => b.classList.contains('open'));
+      allBodies.forEach(b => b.classList.toggle('open', !anyOpen));
+      allHeaders.forEach(h => h.classList.toggle('open', !anyOpen));
+      btn.textContent = anyOpen ? 'Expand All ↓' : 'Collapse All ↑';
+    }
 
     // ==============================
     // ACCORDION
@@ -718,7 +741,7 @@
         <div class="callout-semitechnical aud-semitechnical">⚙️ <strong>Semi-Tech note:</strong> Embed your database schema directly in the prompt. Tools like Lovable and Bolt understand SQL CREATE TABLE statements and will wire up Supabase correctly if you give them the schema upfront.</div>
         <h3>Resources</h3>
         <ul>
-          <li><a href="https://lovableprompts.app" target="_blank" class="text-indigo-600 underline">lovableprompts.app</a> — prompt inspiration for Lovable</li>
+          <li><a href="https://lovableprompts.app" target="_blank" class="text-teal-600 underline">lovableprompts.app</a> — prompt inspiration for Lovable</li>
         </ul>
       `
     });
@@ -818,7 +841,7 @@
         </div>
 
         <h3>5c — App Goes Live</h3>
-        <p>This was successful completion of Phase 3. My project was live at <a href="http://acr-tool.jkspeaks.com" target="_blank" class="text-indigo-600 underline">http://acr-tool.jkspeaks.com</a> (Note: http, not https — yet).</p>
+        <p>This was successful completion of Phase 3. My project was live at <a href="http://acr-tool.jkspeaks.com" target="_blank" class="text-teal-600 underline">http://acr-tool.jkspeaks.com</a> (Note: http, not https — yet).</p>
       `,
       diyHTML: `
         <h3>EC2 Setup Checklist (Generic)</h3>
@@ -854,7 +877,7 @@
       star: false,
       storyHTML: `
         <p>With no past AWS experience, reading blogs on how to set up HTTPS on AWS was making me think — why am I reading pages and pages of documentation when I can ask AI to help?</p>
-        <p>A one-line prompt and Perplexity Assistant was back in action, setting up the certificates, load balancer, and whatever else was required to get my project up on HTTPS. This entire process took under 5 minutes. The final URL: <a href="https://acr-tool.jkspeaks.com" target="_blank" class="text-indigo-600 underline">https://acr-tool.jkspeaks.com</a></p>
+        <p>A one-line prompt and Perplexity Assistant was back in action, setting up the certificates, load balancer, and whatever else was required to get my project up on HTTPS. This entire process took under 5 minutes. The final URL: <a href="https://acr-tool.jkspeaks.com" target="_blank" class="text-teal-600 underline">https://acr-tool.jkspeaks.com</a></p>
         <p>For those wondering how long did Step 4c to 5b take in total: approximately 4 hours, including my lunch break.</p>
       `,
       diyHTML: `
