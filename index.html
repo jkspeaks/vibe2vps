@@ -828,24 +828,24 @@
     buildPhaseCard({
       id: 'phase1', num: 1,
       headline: 'Why your use case is the only decision that truly matters',
-      outcome: 'You chose the right problem. Now build the right solution.',
+      outcome: 'Chose the right problem. Build the right solution.',
       star: false,
       storyHTML: `
-        <p>The use case I picked is <strong><a href="https://acr-tool.jkspeaks.com" target="_blank" class="text-teal-600 underline">Agentic Commerce Readiness Assessment</a></strong>. The reason: I have been doing maturity and readiness assessments for over 15 years and know every trick in the book. I am well versed with how to create these assessments from scratch for any given topic, the manual touchpoints involved end-to-end, and the automation potential.</p>
-        <p>Secondly, I see value in this — it resonates with executives in the Retail and CPG sector. My audience. My credibility. My unfair advantage.</p>
-        <p>The assessment is a multiple-choice or Likert scale survey administered via offline forms (Excel) or online forms. A report is generated at the end for the respondent to gauge their maturity or readiness across select dimensions. Sounds simple, right? Watch how I iteratively add complexity to this use case while learning tools and concepts along the way.</p>
+        <p>The use case I picked is <strong><a href="https://acr-tool.jkspeaks.com" target="_blank" class="text-teal-600 underline">Agentic Commerce Readiness Assessment</a></strong>. <strong>The reason:</strong> I have been doing maturity and readiness assessments for over 15 years and know every trick in the book. I am well versed with how to create these assessments from scratch for any given topic, the manual touchpoints involved end-to-end, and the automation potential.</p>
+        <p>Secondly, I see value in this. It resonates with executives across industry sectors. <em>My audience. My credibility. My unfair advantage.</em></p>
+        <p>The assessment is a typical multiple-choice or Likert scale survey administered via offline forms (Excel) or online forms. A report is generated at the end for the respondent to gauge their maturity or readiness across select dimensions. Sounds simple, right? Watch how I iteratively add complexity to this use case while learning the tools and concepts along the way.</p>
       `,
       diyHTML: `
         <h3>How to Pick Your Use Case</h3>
         <p>Use these three criteria. All three must be true:</p>
         <ul>
-          <li><strong>Domain you know cold</strong> — You've done it manually for years. You know the edge cases. You know what "good" looks like.</li>
+          <li><strong>Domain you know well</strong> — You've done it (manually) for years. You know the edge cases. You know what "good" looks like.</li>
           <li><strong>Audience you can reach</strong> — You have a professional network or community that would find this useful and credible.</li>
-          <li><strong>Problem that benefits from automation</strong> — There's a real pain point: slow, expensive, inconsistent, or inaccessible without your tool.</li>
+          <li><strong>Problem that benefits someone or a process</strong> — There's a real pain point: slow, expensive, inconsistent, or inaccessible without your tool.</li>
         </ul>
         <h3>Anti-patterns to Avoid</h3>
         <ul>
-          <li>❌ "Flight + hotel + activities" — no domain expertise, no real users</li>
+          <li>❌ Something you won't use yourself e.g., "Flight + hotel booking" — flooded use case, no real takers</li>
           <li>❌ Building a clone of an existing popular app — no differentiation</li>
           <li>❌ Picking something too broad ("a social media app") — no focus</li>
         </ul>
@@ -855,14 +855,15 @@
 
     buildPhaseCard({
       id: 'phase2', num: 2,
-      headline: 'From blank canvas to working app — without writing a line of code',
-      outcome: 'A functional, styled, multi-page web app — entirely AI-generated.',
+      headline: 'From blank canvas to working app: The Prototype',
+      outcome: 'A functional, styled, multi-page web app, entirely AI-generated.',
       star: false,
       storyHTML: `
         <h3>Step 2a: Build the Plan Before You Prompt</h3>
-        <p>Your first instinct would be to open Lovable and tell it to create a responsive app. The tool will certainly create something. However, it is less likely to have your style and imagination embedded in it. Eight out of ten chances your audience will spot that it is a vibe-coded tool — and it loses credibility, especially if your target audience is at the executive level.</p>
-        <p>So before opening any tool, I spent time thinking through the key items: pages required (landing, survey, results dashboard), design and aesthetics (dark corporate vs white/blue), color scheme, fonts, and technology stack. A broad guideline saves you from burning tokens on the tool making decisions you should have made.</p>
-
+        <p>Your first instinct might be to prompt a tool like Lovable and accept whatever responsive app it generates. However, an unguided output lacks the professional sophistication required to maintain credibility at the executive level. Before engaging any tool, you must define the architectural blueprint: page flows, design aesthetics, and the technical stack. Similar to constructing a business requirements specification document. This way, the output generated will have your style and imagination. <em> You are in control.</em> A rigorous initial specification also prevents the waste of resources on AI-driven "guesswork."</p>
+        <p>So before opening any tool, I spent time thinking through the key items: pages required (landing, survey, results dashboard), design and aesthetics (dark corporate vs clean), color scheme, fonts, and technology stack. A broad guideline saves you from burning tokens on the tool making decisions you should have made.</p>
+        <p>Having a developer mindset does help, but not mandatory.</p>
+        
         <h3>Step 2b: Prompt Engineering</h3>
         <p>I researched Bolt vs Lovable. Bolt required some developer skills to fix errors; Lovable's tight Supabase integration made it the clear choice for this use case.</p>
         <p>I started with the free plan — 5 tokens per day. Critical constraint. Being organized was non-negotiable. When prompts are detailed, the tool follows them line by line, focusing on implementation rather than guessing. I got all three pages up in the initial 5 tokens.</p>
@@ -897,20 +898,21 @@
         <h3>The Generic Prompt Engineering Framework</h3>
         <p>Follow this sequence for any vibe coding project:</p>
         <ul>
-          <li><strong>1. Research</strong> — Study 3-5 similar apps. Note what you like and what you'd do differently.</li>
-          <li><strong>2. Plan</strong> — List every page, feature, and user flow. Be specific about what happens on each screen.</li>
-          <li><strong>3. Design spec</strong> — Pick theme, colors, fonts, layout. Write it down with exact values.</li>
-          <li><strong>4. Prompt</strong> — Write the full prompt covering: tech stack, design system, database schema, each page's layout and behavior, business logic, scoring/data rules, and content data.</li>
-          <li><strong>5. Refine</strong> — Use each subsequent prompt to add one new feature or fix one specific issue. Detailed, focused prompts only.</li>
+          <li><strong>1. Research</strong>: First, study similar apps in the market (if available). Define your apps USP. Two, Narrow down on the right tool for your use case based-on whether it is mostly static pages or has interactivity with backend, etc.</li>
+          <li><strong>2. Plan/visualize</strong>: List every page, feature, and user flow on a notepad. Be specific about what happens on each screen. In short, visualize the end-state.</li>
+          <li><strong>3. Design spec</strong>: Pick theme, colors, fonts, layout. Write it down with exact values. For example, if you liked the colors on a site, note it down the hex values.</li>
+          <li><strong>4. Prompt building</strong>: Write the full prompt covering: tech stack, design system, database schema, each page's layout and behavior, business logic, scoring/data rules, and content data. Take help from your favorite GPT.</li>
+          <li><strong>5. Refine & Iterate</strong>: Use each subsequent prompt to add one new feature or fix one specific issue. Detailed, focused prompts only.</li>
         </ul>
         <h3>Why One-Line Prompts Fail</h3>
-        <p>The tool has to make every undecided choice for you. It picks a random theme. It invents a data model. It creates a UX nobody asked for. You then spend 10x more tokens trying to undo those decisions — burning your daily allowance with nothing to show.</p>
+        <p>The tool has to make every <em>undecided</em> choice for you. It picks a random theme. It designs a basic data model. It creates a UX nobody asked for. You then spend 10x more tokens trying to undo those decisions — burning your daily allowance with nothing to show.</p>
         <h3>Token Management Rules</h3>
         <ul>
           <li>Never prompt without a written plan for that session</li>
           <li>One feature per prompt — not a list of features</li>
           <li>Split prompts larger than ~15K characters into sequential parts with continuity headers</li>
           <li>Use ChatGPT or Claude to clean up and organize your prompt before pasting it</li>
+          <li>Ask the tool to process the prompt and ask clarifying questions before building</li>
         </ul>
         <div class="callout-nontechnical aud-nontechnical">💡 <strong>Non-Tech tip:</strong> Think of your prompt like a job description for a very fast contractor. Vague = bad work. Specific = exactly what you asked for.</div>
         <div class="callout-semitechnical aud-semitechnical">⚙️ <strong>Semi-Tech note:</strong> Embed your database schema directly in the prompt. Tools like Lovable and Bolt understand SQL CREATE TABLE statements and will wire up Supabase correctly if you give them the schema upfront.</div>
