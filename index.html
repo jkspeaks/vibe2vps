@@ -10,6 +10,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
+  <!-- Dark mode init — must run before Tailwind to prevent flash -->
+  <script>
+    (function(){
+      const t = localStorage.getItem('theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -34,6 +42,34 @@
       --radius-sm: 8px;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
+
+    /* ==============================
+       DARK MODE OVERRIDES
+       ============================== */
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --accent: #2dd4bf;
+      --accent-light: #134e4a;
+      --accent-dark: #5eead4;
+      --navy: #020617;
+      --border: #334155;
+      --card-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+    [data-theme="dark"] .phase-header:hover { background: #1e293b; }
+    [data-theme="dark"] .tab-bar { background: #1e293b; }
+    [data-theme="dark"] body { background: var(--bg); }
+    [data-theme="dark"] .bg-white { background: #1e293b !important; }
+    [data-theme="dark"] .bg-gray-50,
+    [data-theme="dark"] .bg-\[#fafafa\] { background: #1e293b !important; }
+    [data-theme="dark"] .text-gray-900 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .text-gray-700 { color: #cbd5e1 !important; }
+    [data-theme="dark"] .text-gray-500 { color: #94a3b8 !important; }
+    [data-theme="dark"] .text-gray-400 { color: #64748b !important; }
+    [data-theme="dark"] .border-gray-200 { border-color: #334155 !important; }
+    [data-theme="dark"] .bg-gray-100 { background: #1e293b !important; }
+    [data-theme="dark"] #toc { background: #0f172a !important; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -300,6 +336,17 @@
 </head>
 <body class="min-h-screen">
 
+<!-- Sticky Top Bar -->
+<nav id="top-bar" class="no-print sticky top-0 z-50 flex items-center justify-between px-5 py-2.5 border-b shadow-sm" style="background:var(--bg); border-color:var(--border);">
+  <a href="https://www.jkspeaks.com" target="_blank" class="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
+    <img src="assets/jk_logo2.png" alt="JK Logo" class="h-8 w-8 object-contain" />
+  </a>
+  <button id="dark-toggle" onclick="toggleDark()" aria-label="Toggle dark mode"
+    class="p-2 rounded-full hover:bg-gray-100 transition-colors" style="color:var(--text-secondary);">
+    <i data-lucide="moon" class="w-4 h-4" id="dark-icon"></i>
+  </button>
+</nav>
+
   <!-- TOC Sidebar (desktop) -->
   <aside id="toc" class="no-print"></aside>
 
@@ -508,6 +555,20 @@
       `;
       stepper.appendChild(el);
     });
+
+    // ==============================
+    // DARK MODE TOGGLE
+    // ==============================
+    function toggleDark() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+      localStorage.setItem('theme', isDark ? '' : 'dark');
+      const icon = document.getElementById('dark-icon');
+      icon.setAttribute('data-lucide', isDark ? 'moon' : 'sun');
+      lucide.createIcons();
+      const btn = document.getElementById('dark-toggle');
+      btn.style.background = '';
+    }
 
     // ==============================
     // EXPAND ALL / COLLAPSE ALL
@@ -935,6 +996,16 @@
     // Build TOC and init icons (must be last — after all cards are in DOM)
     buildTOC();
     lucide.createIcons();
+
+    // Sync dark mode icon with persisted theme on page load
+    (function() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const icon = document.getElementById('dark-icon');
+      if (isDark && icon) {
+        icon.setAttribute('data-lucide', 'sun');
+        lucide.createIcons();
+      }
+    })();
 
   </script>
 
