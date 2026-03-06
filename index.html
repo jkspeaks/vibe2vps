@@ -369,19 +369,6 @@
     <!-- HERO SECTION -->
     <section id="hero" class="text-center pt-12 pb-10">
 
-      <!-- Audience Toggle -->
-      <div id="audience-toggle" class="no-print inline-flex items-center gap-1 bg-gray-100 rounded-full p-1 mb-8 text-sm font-medium">
-        <button onclick="setAudience('nontechnical')" data-aud="nontechnical"
-          class="aud-btn px-4 py-1.5 rounded-full transition-all">Non-Tech</button>
-        <button onclick="setAudience('both')" data-aud="both"
-          class="aud-btn px-4 py-1.5 rounded-full transition-all bg-white shadow text-teal-600">Both</button>
-        <button onclick="setAudience('semitechnical')" data-aud="semitechnical"
-          class="aud-btn px-4 py-1.5 rounded-full transition-all">Semi-Tech</button>
-      </div>
-      <p class="text-xs text-gray-400 mb-8 no-print">
-        Toggle to adjust the depth of "Do It Yourself" content throughout the playbook.
-      </p>
-
       <!-- Title Block -->
       <div class="inline-block bg-teal-50 text-teal-700 text-xs font-semibold tracking-widest uppercase px-3 py-1 rounded-full mb-4">
         A Vibe Coding Playbook
@@ -403,11 +390,16 @@
         Here's a real industry use case — from blank canvas to production-grade, HTTPS-hosted, VPS-deployed app.
       </p>
 
-      <!-- Phase Stepper (built by JS) -->
-      <div id="phase-stepper" class="flex items-center justify-center gap-1 flex-wrap mb-10 no-print"></div>
+      <!-- Phase Stepper wrapped in "The Journey" box (built by JS) -->
+      <div class="no-print text-center mb-10">
+        <div class="inline-block border border-gray-200 rounded-2xl px-6 py-4">
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">The Journey</p>
+          <div id="phase-stepper" class="flex items-center justify-center gap-1 flex-wrap"></div>
+        </div>
+      </div>
 
-      <!-- Export / Share toolbar -->
-      <div class="no-print flex flex-wrap items-center gap-2 mb-2">
+      <!-- Export / Share toolbar (centred) -->
+      <div class="no-print flex flex-wrap items-center justify-center gap-2 mb-4">
         <button onclick="window.print()"
           class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-teal-600 border border-gray-200 hover:border-teal-400 rounded-full px-4 py-2 transition-all hover:shadow-sm">
           <i data-lucide="download" class="w-4 h-4"></i>
@@ -429,6 +421,19 @@
           Share on LinkedIn
         </button>
       </div>
+
+      <!-- Audience Toggle (moved below export toolbar) -->
+      <div id="audience-toggle" class="no-print inline-flex items-center gap-1 bg-gray-100 rounded-full p-1 mb-3 text-sm font-medium">
+        <button onclick="setAudience('nontechnical')" data-aud="nontechnical"
+          class="aud-btn px-4 py-1.5 rounded-full transition-all">Non-Tech</button>
+        <button onclick="setAudience('both')" data-aud="both"
+          class="aud-btn px-4 py-1.5 rounded-full transition-all bg-white shadow text-teal-600">Both</button>
+        <button onclick="setAudience('semitechnical')" data-aud="semitechnical"
+          class="aud-btn px-4 py-1.5 rounded-full transition-all">Semi-Tech</button>
+      </div>
+      <p class="text-xs text-gray-400 mb-6 no-print">
+        Toggle to adjust the depth of "Do It Yourself" content throughout the playbook.
+      </p>
 
     </section>
 
@@ -563,7 +568,7 @@
     // PHASE STEPPER
     // ==============================
     const PHASE_LABELS = [
-      { num: 0, short: 'Before' },
+      { num: 0, short: 'ReadMe' },
       { num: 1, short: 'Use Case' },
       { num: 2, short: 'Build' },
       { num: 3, short: 'GitHub' },
@@ -1098,6 +1103,17 @@
         <p>The list goes on. Where it stops is when you have found your preferred technology stack and mastered the concepts to apply to any complementary technology.</p>
       `,
       diyHTML: `
+        <figure class="my-4">
+          <img
+            src="assets/vibe_approach.png"
+            alt="How to approach vibe coding projects — Research, Plan, Design Spec, Prompt, Refine"
+            class="w-full max-h-96 rounded-xl border border-gray-200 shadow-sm"
+            style="object-fit:contain;"
+          />
+          <figcaption class="text-center text-xs text-gray-400 mt-2">
+            The Vibe Coding Approach
+          </figcaption>
+        </figure>
         <h3>The Maturity Ladder</h3>
         <ul>
           <li><strong>Non-Technical Founder</strong> — Uses AI to describe what they want. Accepts what they get.</li>
