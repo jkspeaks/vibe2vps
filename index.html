@@ -70,6 +70,19 @@
     [data-theme="dark"] .border-gray-200 { border-color: #334155 !important; }
     [data-theme="dark"] .bg-gray-100 { background: #1e293b !important; }
     [data-theme="dark"] #toc { background: #0f172a !important; }
+    /* Prose text — .prose p/li use hardcoded #444 */
+    [data-theme="dark"] .prose p,
+    [data-theme="dark"] .prose li { color: rgb(148, 163, 184) !important; }
+    [data-theme="dark"] .prose h3 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .prose blockquote { color: #94a3b8 !important; border-color: var(--accent); }
+    [data-theme="dark"] .prose code { background: #1e293b !important; color: #94a3b8 !important; }
+    [data-theme="dark"] .prose th { background: #334155 !important; color: #f1f5f9 !important; }
+    [data-theme="dark"] .prose td { color: rgb(148, 163, 184) !important; border-color: #334155 !important; }
+    /* Tools Landscape table — rows use hardcoded inline background styles */
+    [data-theme="dark"] #end-matter table thead { background: #334155 !important; }
+    [data-theme="dark"] #end-matter table th { color: #f1f5f9 !important; border-color: #475569 !important; }
+    [data-theme="dark"] #end-matter table tbody tr { background: #1e293b !important; }
+    [data-theme="dark"] #end-matter table td { color: rgb(148, 163, 184) !important; border-color: #334155 !important; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -393,11 +406,29 @@
       <!-- Phase Stepper (built by JS) -->
       <div id="phase-stepper" class="flex items-center justify-center gap-1 flex-wrap mb-10 no-print"></div>
 
-      <!-- Export button -->
-      <button onclick="window.print()" class="no-print inline-flex items-center gap-2 text-sm text-gray-400 hover:text-gray-600 border border-gray-200 rounded-full px-4 py-2 transition-colors">
-        <i data-lucide="download" class="w-4 h-4"></i>
-        Export as PDF
-      </button>
+      <!-- Export / Share toolbar -->
+      <div class="no-print flex flex-wrap items-center gap-2 mb-2">
+        <button onclick="window.print()"
+          class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-teal-600 border border-gray-200 hover:border-teal-400 rounded-full px-4 py-2 transition-all hover:shadow-sm">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          Export PDF
+        </button>
+        <button onclick="downloadMarkdown()"
+          class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-teal-600 border border-gray-200 hover:border-teal-400 rounded-full px-4 py-2 transition-all hover:shadow-sm">
+          <i data-lucide="file-text" class="w-4 h-4"></i>
+          Download MD
+        </button>
+        <button onclick="shareOnX()"
+          class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-teal-600 border border-gray-200 hover:border-teal-400 rounded-full px-4 py-2 transition-all hover:shadow-sm">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.629 5.905-5.629zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Share on X
+        </button>
+        <button onclick="shareOnLinkedIn()"
+          class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-teal-600 border border-gray-200 hover:border-teal-400 rounded-full px-4 py-2 transition-all hover:shadow-sm">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          Share on LinkedIn
+        </button>
+      </div>
 
     </section>
 
@@ -505,7 +536,7 @@
       <!-- Footer -->
       <footer class="text-center text-xs text-gray-400 pb-12">
         <hr class="border-gray-200 mb-6" />
-        <p>From Vibe 2 VPS &nbsp;·&nbsp; A LinkedIn Playbook &nbsp;·&nbsp; Based on real experience &nbsp;·&nbsp; Built with vibe coding</p>
+        <p>From Vibe 2 VPS &nbsp;·&nbsp; Grounded Playbook &nbsp;·&nbsp; Based on real experience &nbsp;·&nbsp; Built with vibe</p>
         <p class="mt-2">Author: Jayakumar Rajaretnam (JK) &nbsp;|&nbsp; <a href="https://www.jkspeaks.com" target="_blank" class="hover:text-teal-600 underline">www.jkspeaks.com</a></p>
       </footer>
 
@@ -581,6 +612,88 @@
       allBodies.forEach(b => b.classList.toggle('open', !anyOpen));
       allHeaders.forEach(h => h.classList.toggle('open', !anyOpen));
       btn.textContent = anyOpen ? 'Expand All ↓' : 'Collapse All ↑';
+    }
+
+    // ==============================
+    // MARKDOWN DOWNLOAD
+    // ==============================
+    function htmlToMarkdown(html) {
+      // Remove no-print elements (copy buttons, etc.)
+      let s = html.replace(/<[^>]*class="[^"]*no-print[^"]*"[^>]*>[\s\S]*?<\/(?:button|div|span)>/gi, '');
+      // Headings
+      s = s.replace(/<h3[^>]*>([\s\S]*?)<\/h3>/gi, '\n\n### $1\n\n');
+      s = s.replace(/<h4[^>]*>([\s\S]*?)<\/h4>/gi, '\n\n#### $1\n\n');
+      // Inline formatting
+      s = s.replace(/<strong[^>]*>([\s\S]*?)<\/strong>/gi, '**$1**');
+      s = s.replace(/<b[^>]*>([\s\S]*?)<\/b>/gi, '**$1**');
+      s = s.replace(/<em[^>]*>([\s\S]*?)<\/em>/gi, '_$1_');
+      s = s.replace(/<i[^>]*>([\s\S]*?)<\/i>/gi, '_$1_');
+      s = s.replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, '`$1`');
+      // Blockquotes / callouts
+      s = s.replace(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/gi, (_, inner) =>
+        '\n' + inner.replace(/<[^>]+>/g, '').trim().split('\n').map(l => '> ' + l.trim()).join('\n') + '\n'
+      );
+      s = s.replace(/<div[^>]*class="[^"]*callout[^"]*"[^>]*>([\s\S]*?)<\/div>/gi, (_, inner) =>
+        '\n> ' + inner.replace(/<[^>]+>/g, '').trim() + '\n'
+      );
+      // Lists
+      s = s.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, '\n- $1');
+      s = s.replace(/<\/ul>|<\/ol>/gi, '\n');
+      s = s.replace(/<ul[^>]*>|<ol[^>]*>/gi, '');
+      // Paragraphs / divs / br
+      s = s.replace(/<\/p>|<\/div>/gi, '\n');
+      s = s.replace(/<br\s*\/?>/gi, '\n');
+      s = s.replace(/<p[^>]*>/gi, '\n');
+      s = s.replace(/<div[^>]*>/gi, '');
+      // Strip remaining tags
+      s = s.replace(/<[^>]+>/g, '');
+      // Decode common entities
+      s = s.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&')
+           .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+           .replace(/&mdash;/g, '—').replace(/&ndash;/g, '–')
+           .replace(/&#8203;/g, '').replace(/&hellip;/g, '…')
+           .replace(/&#9733;/g, '★');
+      // Normalise whitespace
+      s = s.replace(/[ \t]+/g, ' ');
+      s = s.replace(/\n[ \t]+/g, '\n');
+      s = s.replace(/\n{3,}/g, '\n\n');
+      return s.trim();
+    }
+
+    function downloadMarkdown() {
+      const cards = document.querySelectorAll('.phase-card');
+      let md = '# From Vibe 2 VPS\n\n';
+      md += '> Grounded Playbook · Based on real experience · Built with vibe\n\n';
+      md += '---\n\n';
+      cards.forEach(card => {
+        const headline = card.querySelector('.phase-headline')?.innerHTML || '';
+        const outcome  = card.querySelector('.phase-outcome')?.textContent.trim() || '';
+        const num      = card.querySelector('.phase-num')?.textContent.trim() || '';
+        const story    = card.querySelector('.tab-panel[data-tab="story"]')?.innerHTML || '';
+        const diy      = card.querySelector('.tab-panel[data-tab="diy"]')?.innerHTML || '';
+        md += `## Phase ${num}: ${htmlToMarkdown(headline)}\n\n`;
+        if (outcome) md += `_${outcome}_\n\n`;
+        if (story) { md += '### My Story\n\n' + htmlToMarkdown(story) + '\n\n'; }
+        if (diy)   { md += '### Do It Yourself\n\n' + htmlToMarkdown(diy)   + '\n\n'; }
+        md += '---\n\n';
+      });
+      const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = 'from-vibe-2-vps-playbook.md';
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
+
+    function shareOnX() {
+      const text = encodeURIComponent('From Vibe 2 VPS: A grounded playbook on vibe coding — from prototype to production 🚀');
+      const url  = encodeURIComponent(window.location.href);
+      window.open('https://twitter.com/intent/tweet?text=' + text + '&url=' + url, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + url, '_blank');
     }
 
     // ==============================
