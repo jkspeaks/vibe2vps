@@ -907,7 +907,7 @@
 
         <p>The excel file containing the questions, options and question type was included as an attachment and the contents of the excel was also detailed as part of the prompt.</p> 
         <div class="callout-nontechnical aud-nontechnical">💡 <strong>Tip:</strong> Despite giving a detailed prompt, add a line at the end: "Ask me clarifying questions if any before building."</div>
-        
+        <p>The site was live at: <a href="https://commerce-readiness.lovable.app" target="_blank" class="text-teal-600 underline">https://commerce-readiness.lovable.app</a>.</p>
       `,
       diyHTML: `
         <h3>The Vibe-coding Framework</h3>
@@ -941,11 +941,15 @@
     buildPhaseCard({
       id: 'phase3', num: 3,
       headline: 'Own your code. Escape the platform.',
-      outcome: 'Your codebase is now yours — portable, inspectable, version-controlled.',
+      outcome: 'The codebase is now yours — portable, inspectable, version-controlled.',
       star: false,
       storyHTML: `
-        <p>Just when I thought everything was done and mission accomplished, I realized: when my paid Lovable subscription ends, I lose the custom domain and get the "Edit with Lovable" badge back. That would not be pretty for an executive-facing tool.</p>
-        <p>I discovered that moving the codebase to GitHub would keep Lovable at bay and keep my project intact. Moving the code to GitHub is a one-click process in Lovable. Once done, I opened the repo in Cursor to verify that no part of the codebase was referencing any script back to Lovable's servers. Once clean — independence achieved.</p>
+        <p>Just when I thought everything was done and mission accomplished, I realized: A project is not truly finished if it remains tethered to a third-party builder. I hate vendor lock-ins. Also, the *.lovable.app does not look very professional to me (at least for my use case.)</p> 
+        <p>My first instinct was to setup a sub-domain and do a redirection. Went to my host (www.jkspeaks.com) and setup the sub-domain. This hardly took two minutes and I realized, it was only redirecting to the *.lovable.app URL and not really staying on the sub-domain</p>
+        <p>This leaves setting up the app on custom domain as the next best option. Hence, I picked up a subscription from Lovable. Went ahead and configured my host (manually) as I have a slightly complex setup. I.e., domain name with Namecheap, hosting with JaguarPC. This step took a few hours as tickets had to be raised with my hosting provider to resolve certain server side issues.</p>
+        <p>The site was live at: <a href="https://ai-readiness.jkspeaks.com/" target="_blank" class="text-teal-600 underline">https://ai-readiness.jkspeaks.com/</a></p>
+        <p>The next realization, when my paid Lovable subscription ends, won't I lose the custom domain that I hooked up the app to and also get the "Edit with Lovable" badge back on the bottom right of the page. That would not be pretty for my audience (executives).</p>
+        <p>I discovered that moving the codebase to GitHub would keep Lovable at bay and keep my project intact. Moving the code to GitHub is a one-click process in Lovable. Once done, I opened the repo in Cursor to verify that no part of the codebase was referencing any script back to Lovable's servers. Now, I am getting closer to my goal of having an independent app.</p>
       `,
       diyHTML: `
         <h3>What GitHub Gives You</h3>
