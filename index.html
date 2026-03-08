@@ -947,7 +947,7 @@
         <p>Just when I thought everything was done and mission accomplished, I realized: A project is not truly finished if it remains tethered to a third-party builder. Dependence on platform-hosted domains or "Powered by" badges compromises professional integrity. Also, I hate vendor lock-ins. Final string, the *.lovable.app in the URL does not look professional for two reasons. One, for my use case, given my target audience. Two, vibe coding has its own negative aura around it due to several reasons.</p> 
         <p>My first instinct was to setup a sub-domain and do a redirection. Went to my host (www.jkspeaks.com), opened the <a href="https://www.cpanel.net/" target="_blank" class="text-teal-600 underline">cPanel</a>, setup the sub-domain and gave the redirection URL. This hardly took two minutes. On validating the setup, I realized it was only redirecting to the commerce-readiness.lovable.app URL and not really staying on the sub-domain I created.</p>
         <p>This leaves setting up the app on custom domain as the next best option. Hence, I picked up a subscription from Lovable. Went ahead and configured my host (manually) as I have a slightly complex setup. I.e., domain name with <a href="https://www.namecheap.com/" target="_blank" class="text-teal-600 underline">namecheap</a>, hosting with <a href="https://www.jaguarpc.com/" target="_blank" class="text-teal-600 underline">JaguarPC</a>. This step took a few hours as tickets had to be raised with my hosting provider to resolve certain server side issues before I can continue. In addition, Lovable does not have an auto-setup option for my provider and hence I had to do it manually through the cPanel. No complaints here, as my goal was to learn. This gave me the opportunity to learn about managing DNS zones.</p>
-        <p>The site was live at: <a href="https://ai-readiness.jkspeaks.com/" target="_blank" class="text-teal-600 underline">https://ai-readiness.jkspeaks.com/</a></p>
+        <p>The site was live at: <a href="https://acr.jkspeaks.com/" target="_blank" class="text-teal-600 underline">https://acr.jkspeaks.com/</a></p>
         <p>When I was wondering if this is where it stops, the next realization hit me. What happens when my paid Lovable subscription ends? Won't I lose the custom domain that I hooked up the app to, and also get the "Edit with Lovable" badge back on the bottom right of the page. That would not be pretty for my audience.</p>
         <p>I discovered that moving the codebase to GitHub would keep Lovable at bay and keep my project intact. Moving the code to GitHub is a one-click process in Lovable. Once done, I opened the repo in Cursor to verify that no part of the codebase was referencing any script back to Lovable's servers. Now, I am getting closer to my goal of having an independent app. But miles to go before I sleep... (Courtesy: Robert Frost)</p>
       `,
@@ -1009,17 +1009,18 @@
 
     buildPhaseCard({
       id: 'phase5', num: 5,
-      headline: 'From local to live — and an AI agent takes the wheel',
-      outcome: 'Your app is running live at a public URL. You barely clicked a button.',
+      headline: 'The VPS move',
+      outcome: 'Let AI agents take the wheel.',
       star: true,
       storyHTML: `
-        <h3>5a — Set Up EC2</h3>
-        <p>I created an account in AWS and started to read on how to set up EC2 and host the app. Reading pages and pages of documentation when I have AI available seemed counterproductive. I asked Claude to walk me through the EC2 setup — step by step, my actual console, real-time guidance. Hit the first error, pivoted to a different approach.</p>
+        <h3>Step 5a: Set Up EC2</h3>
+        <p>I created an account in AWS and started to read on how to set up EC2 and host the app. This is my first time working with AWS. Reading pages and pages of documentation when I have AI available seemed counterproductive. Hence, I provided the required details and asked Perplexity to give me the customized steps (i.e., literally indicate what I should fill in each box) to setup EC2. Went through it, all done but towards the end, I hit an error. Had to pivot to a different approach now.</p>
 
-        <h3>5b — The Perplexity Computer Moment ★</h3>
-        <p>I had this instinct that Perplexity Assistant, even without the Max plan, would leverage some capabilities of Perplexity Computer — which had just launched. So I tapped into <strong>Comet browser</strong>, created the AWS account, and started to configure the EC2 instance.</p>
-        <p>Hit the first error and asked Perplexity Assistant to take over. Gave it a couple of permissions it wanted — like accessing the browser. No different from what I had done with Claude Code, Craft agent and OpenClaw. Using this permission, it started to take screenshots, read what was on the screen, scroll, click buttons, fill text boxes, and submit them on my behalf.</p>
-        <p>To my surprise, Perplexity Assistant did leverage Perplexity Computer extensions to take screenshots, click buttons, navigate the AWS Console, fill form fields and fix the errors.</p>
+        <h3>Step 5b: The Perplexity Computer Moment ★</h3>
+        <p>I had this instinct that Perplexity Assistant, even without the Max plan, would leverage some capabilities of Perplexity Computer — which had just launched. So I tapped into <strong><a href="https://www.perplexity.ai/comet" target="_blank" class="text-teal-600 underline">Comet browser</a></strong>, logged into the AWS account, navigated to the EC2 instance setup page and asked Perplexity Assistant to review what was wrong.</p>
+        <p>Gave it a couple of permissions it wanted — like accessing the browser, taking screenshots, etc. No different from what I had done with Claude Code, <a href="https://agents.craft.do/" target="_blank" class="text-teal-600 underline">Craft Agents</a> and <a href="https://openclaw.ai/" target="_blank" class="text-teal-600 underline">OpenClaw</a>. Using this permission, it started to take screenshots, read what was on the screen, navigate (scroll), click buttons, fill text boxes, and submit them on my behalf.</p>
+        <p>To my surprise, EC2 was configured with no errors. At every stage, I verified what it did and gave it the next task. For example, SSH into the instance and install node.js, clone my git repo, etc. In short, I was orchestrating the agent. Perplexity Assistant with its Perplexity Computer extensions to take these screenshots, click buttons, navigate the AWS Console, fill form fields, fix the errors, open additional tabs to check help documentations, etc. was something I wasn\'t expecting. It performed as good as Claude Code would have.</p>
+        <p>Learning does not stop here, there are nuances like starting and stopping the process, etc. when things go wrong. So you interact with the assistant to understand the various options and then try to automate the same too. This way, when you realize you are already half way through the free credits even before the month is over, you can decide if you should setup a schedule or stop the instance for a while, etc.</p> 
 
         <div class="proof-panel">
           <div class="proof-panel-title">Perplexity Computer in Action — Live Evidence</div>
@@ -1033,11 +1034,11 @@
               <div class="proof-caption">Perplexity navigates AWS Console — "DNS added. Status: Issued."</div>
             </div>
           </div>
-          <div class="proof-quote">"I didn't click a single button in this step."</div>
+          <div class="proof-quote">"I did nothing but verify and orchestrate the agent."</div>
         </div>
 
-        <h3>5c — App Goes Live</h3>
-        <p>This was successful completion of Phase 3. My project was live at <a href="http://acr-tool.jkspeaks.com" target="_blank" class="text-teal-600 underline">http://acr-tool.jkspeaks.com</a> (Note: http, not https — yet).</p>
+        <h3>Step 5c: App Goes Live</h3>
+        <p>This was successful completion of Phase 3. My project was live at <a href="http://acr-tool.jkspeaks.com" target="_blank" class="text-teal-600 underline">http://acr-tool.jkspeaks.com</a> (Note: <strong>http</strong>, not https).</p>
       `,
       diyHTML: `
         <h3>EC2 Setup Checklist (Generic)</h3>
@@ -1052,7 +1053,8 @@
           <li>Start the app with PM2 (process manager) so it stays running after you disconnect</li>
         </ul>
         <h3>What is Perplexity Computer?</h3>
-        <p>Perplexity Computer is an AI agent that can control a browser — taking screenshots, clicking buttons, filling forms, navigating web interfaces — on your behalf. It's accessible via the <strong>Comet browser</strong>.</p>
+        <p><a href="https://www.perplexity.ai/hub/blog/introducing-perplexity-computer" target="_blank" class="text-teal-600 underline">Perplexity Computer</a> is a general-purpose digital worker that operates the same interfaces we do. It operates the software stack just like a human co-worker would: by using it. Computer reasons, delegates, searches, builds, remembers, codes, and delivers. Perplexity Computer breaks it into tasks and subtasks, creating sub-agents for execution. The sub-agents might do web research, document generation, data processing, or API calls to your connected services. A document is drafted by one agent while another gathers the data it needs.</p> 
+        <p>The coordination is automatic, and the work is asynchronous. It's accessible via the <strong>Comet browser</strong>.</p>
         <p>When you hit a complex AWS setup error, instead of reading documentation for 30 minutes, you can:</p>
         <ul>
           <li>Open Comet browser</li>
@@ -1072,9 +1074,9 @@
       outcome: 'http://acr-tool.jkspeaks.com → https:// — in under 5 minutes.',
       star: false,
       storyHTML: `
-        <p>With no past AWS experience, reading blogs on how to set up HTTPS on AWS was making me think — why am I reading pages and pages of documentation when I can ask AI to help?</p>
+        <p>With no past AWS experience, reading blogs on how to set up HTTPS on AWS was making me think — why am I reading pages and pages of documentation when they are meant to be designed for AI to do our work? So, I asked AI to setup the https.</p>
         <p>A one-line prompt and Perplexity Assistant was back in action, setting up the certificates, load balancer, and whatever else was required to get my project up on HTTPS. This entire process took under 5 minutes. The final URL: <a href="https://acr-tool.jkspeaks.com" target="_blank" class="text-teal-600 underline">https://acr-tool.jkspeaks.com</a></p>
-        <p>For those wondering how long did Step 4c to 5b take in total: approximately 4 hours, including my lunch break.</p>
+        <p>For those wondering how long did Step 4c to 5b take in total: approximately 4 hours, including my <em>lunch break</em>.</p>
       `,
       diyHTML: `
         <h3>What HTTPS Requires</h3>
@@ -1096,7 +1098,7 @@
       outcome: 'A framework you can apply to any use case, any time.',
       star: false,
       storyHTML: `
-        <p>This project does not end here. Here is how I am thinking through the next iterations — so you can see what scaling a vibe-coded app to production grade actually looks like:</p>
+        <p>This project does not end here. Here is how I am thinking through the next set of iterations. I want you to understand what scaling a vibe-coded app to production grade actually looks like:</p>
         <figure class="my-4">
           <img
             src="assets/Prioritization matrix.png"
@@ -1109,15 +1111,15 @@
           </figcaption>
         </figure>
         <ul>
-          <li>Observability setup using AWS native features + open source tools</li>
-          <li>Token-based login system — enabling multiple organizations to run surveys simultaneously</li>
-          <li>Capability to take a custom questionnaire as input and generate a tailored assessment</li>
+          <li>Observability setup using AWS native features (optionally, try open source tools)</li>
+          <li>Token-based login system: enabling multiple organizations to run surveys simultaneously</li>
+          <li>Capability to take a custom excel questionnaire as input and generate a tailored assessment instantly</li>
           <li>Advanced database management console</li>
-          <li>Reassessment after 12 months — a report showing how the organization has matured</li>
+          <li>Reassessment after 12 months: a report showing how the organization has matured</li>
           <li>Chatbot to interact with the generated report</li>
           <li>Voice-activated survey filling (accessibility feature)</li>
         </ul>
-        <p>The list goes on. Where it stops is when you have found your preferred technology stack and mastered the concepts to apply to any complementary technology.</p>
+        <p>The list goes on and not in any particular order. Where it stops is, when you have found your preferred technology stack and mastered the concepts to apply to any complementary technology.</p>
       `,
       diyHTML: `
         <figure class="my-4">
@@ -1133,9 +1135,9 @@
         </figure>
         <h3>The Maturity Ladder</h3>
         <ul>
-          <li><strong>Non-Technical Founder</strong> — Uses AI to describe what they want. Accepts what they get.</li>
-          <li><strong>Vibe Architect</strong> — Structures prompts. Owns the design. Iterates with intent. (Where this playbook takes you)</li>
-          <li><strong>Agentic Engineer</strong> — Combines domain expertise with agent orchestration. Observability. Security. Scale.</li>
+          <li><strong>Non-Technical Founder</strong>: Uses AI to describe what they want. Accepts what they get.</li>
+          <li><strong>Vibe Architect</strong>: Structures prompts. Owns the design. Iterates with intent. (Where this playbook takes you)</li>
+          <li><strong>Agentic Engineer</strong>: Combines domain expertise with agent orchestration. Observability. Security. Scale.</li>
         </ul>
         <h3>What "Production Grade" Means</h3>
         <ul>
@@ -1143,6 +1145,9 @@
           <li>No platform branding or dependencies</li>
           <li>Data persisted in a real database (not localStorage)</li>
           <li>Error handling and validation</li>
+          <li>Row level security (RLS) for projects involving databases</li>
+          <li>Checks for data being transmitted without encryption</li>
+          <li>Control the level of detail exposed in error messages</li> 
           <li>App stays running when you close your laptop (process manager)</li>
           <li>You can hand the URL to a client and not be embarrassed</li>
         </ul>
